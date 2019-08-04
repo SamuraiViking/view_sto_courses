@@ -3,6 +3,7 @@
     <h1>{{ message }}</h1>
     {{ term.year }}
     {{ term.semester }}
+    <div>{{ termCourses }}</div>
     <div>
       <button v-on:click="changeSemester(-1)">Prev Semester</button>
       <button v-on:click="changeSemester(1)">Next Semester</button>
@@ -30,7 +31,7 @@ export default {
       message: "Welcome to Vue.js!",
       year: 2018,
       semester: 1,
-      term_courses: '',
+      termCourses: 'term courses',
       term: '',
     };
   },
@@ -41,26 +42,29 @@ export default {
     });
   },
   methods: {
-    getTerm: function() {
-      axios.get(`api/terms?order=1&term=${this.year}${this.semester}`).then(response => {
-        this.term = response.data;
-        this.term = this.term[0];
-      });
-    },
-    getTerm: function() {
-      
-    }
     changeSemester: function(change) {
-      if (this.semester + change <= 4 && this.semester + change >= 1) {
+      if (this.semester + change <= 5 && this.semester + change >= 1) {
         this.semester += change;
         this.getTerm();
       }
     },
     changeYear: function(change) {
-      if (this.year + change <= 2021 && this.year + change >= 2018) {
+      if (this.year + change <= 2022 && this.year + change >= 2018) {
         this.year += change;
         this.getTerm();
       }
+    },
+    getTerm: function() {
+      axios.get(`api/terms?order=1&term=${this.year}${this.semester}`).then(response => {
+        this.term = response.data;
+        this.term = this.term[0];
+      });
+      this.getTermCourses(this.term.id);
+    },
+    getTermCourses: function(termId) {
+      axios.get(`api/terms/${termId}/courses`).then(response => {
+        this.termCourses = response.data; 
+      });
     },
   }
 };
