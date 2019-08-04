@@ -11,7 +11,7 @@
 export default {
   data: function() {
     return {
-      message: "Welcome to the test page hahahaha!"
+      message: "Welcome to the courses page"
     };
   },
   created: function() {},
