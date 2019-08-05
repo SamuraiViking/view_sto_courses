@@ -4,7 +4,10 @@
     <div>
       {{ term.year }}
       {{ term.semester }}
-      <div>{{ termCourses }}</div>
+      <!-- {{ termCourses }} -->
+      <div v-for="course in termCourses">
+        {{ course.name }} {{ course.days }} {{ course.times }} 
+      </div>
       <div>
         <button v-on:click="changeSemester(-1)">Prev Semester</button>
         <button v-on:click="changeSemester(1)">Next Semester</button>
@@ -21,7 +24,10 @@
     <div>
       <div v-if="coursesAvaiable" v-for="course in courses">
         <hr>
-        <p>{{ course.name }} {{ course.days }} {{ course.times }} <button>Add Course</button></p>
+        <p>
+          {{ course.name }} {{ course.days }} {{ course.times }} 
+          <button v-on:click="addCourse(course)">Add Course</button>
+        </p>
       </div>
       <div v-if="!coursesAvaiable">
         <p>Not yet available</p>
@@ -52,6 +58,11 @@ export default {
     axios.get(`api/terms?order=1&term=${this.year}${this.semester}`).then(response => {
       this.term = response.data;
       this.term = this.term[0];
+      console.log(this.term.id);
+      axios.get(`api/terms/${this.term.id}/courses`).then(response => {
+        this.termCourses = response.data;
+        this.termCourses = this.termCourses;
+      });
     });
     axios.get('api/courses?type=class').then(response => {
       this.courses = response.data.courses;
@@ -73,8 +84,6 @@ export default {
     changeYear: function(change) {
       if (this.year + change <= 2022 && this.year + change >= 2015) {
         this.year += change;
-        console.log(this.year);
-        console.log(this.semester);
         this.getTerm();
       }
     },
@@ -86,8 +95,8 @@ export default {
       this.getCourses();
       this.getTermCourses(this.term.id);
     },
-    getTermCourses: function(termId) {
-      axios.get(`api/terms/${termId}/courses`).then(response => {
+    getTermCourses: function() {
+      axios.get(`api/terms/${this.term.id}/courses`).then(response => {
         this.termCourses = response.data; 
       });
     },
@@ -99,7 +108,12 @@ export default {
           this.coursesAvaiable = false;
         }
       });
-    }
+    },
+    addCourse: function(theCourse) {
+      axios.post(`api/course_terms?course_id=${theCourse.id}&term_id=${this.term.id}`).then(response => {
+        this.getTermCourses();
+      });
+    },
   }
 };
 </script>
