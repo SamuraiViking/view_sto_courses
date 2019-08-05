@@ -4,6 +4,13 @@
     <div>
       {{ term.year }}
       {{ term.semester }}
+      <select v-model="selected">
+        <option v-for="option in options" v-bind:value="option.value">
+          {{ option.text }}
+        </option>
+      </select>
+      <span>Selected: {{ selected }}</span>
+      <button v-on:click="paramDepart()">Search</button>
       <div v-for="course in termCourses">
         {{ course.name }} {{ course.days }} {{ course.times }}
         <button v-on:click="removeCourse(course)"> Remove Course </button>
@@ -51,7 +58,13 @@ export default {
       courses: '',
       termCourses: '',
       term: '',
-      coursesAvaiable: true
+      coursesAvaiable: true,
+      selected: 'A',
+      options: [
+        { text: 'MATH', value: 'MATH' },
+        { text: 'CSCI', value: 'CSCI' },
+        { text: 'ECON', value: 'ECON' }
+      ]
     };
   },
   created: function() {
@@ -111,6 +124,11 @@ export default {
     removeCourse: function(theCourse) {
       axios.delete(`api/course_terms/${this.term.id}/${theCourse.id}`).then(response => {
         this.getTerm();
+      });
+    },
+    paramDepart: function() {
+      axios.get(`api/courses?term=${this.year}${this.semester}&type=class&department=${this.selected}`).then(response => {
+        this.courses = response.data.courses;
       });
     }
   }
