@@ -4,9 +4,9 @@
     <div>
       {{ term.year }}
       {{ term.semester }}
-      <!-- {{ termCourses }} -->
       <div v-for="course in termCourses">
-        {{ course.name }} {{ course.days }} {{ course.times }} 
+        {{ course.name }} {{ course.days }} {{ course.times }}
+        <button v-on:click="removeCourse(course)"> Remove Course </button>
       </div>
       <div>
         <button v-on:click="changeSemester(-1)">Prev Semester</button>
@@ -49,20 +49,15 @@ export default {
       year: 2019,
       semester: 1,
       courses: '',
-      termCourses: 'term courses',
+      termCourses: '',
       term: '',
       coursesAvaiable: true
     };
   },
   created: function() {
     axios.get(`api/terms?order=1&term=${this.year}${this.semester}`).then(response => {
-      this.term = response.data;
-      this.term = this.term[0];
-      console.log(this.term.id);
-      axios.get(`api/terms/${this.term.id}/courses`).then(response => {
-        this.termCourses = response.data;
-        this.termCourses = this.termCourses;
-      });
+      this.term = response.data[0];
+      this.termCourses = this.term.courses;
     });
     axios.get('api/courses?type=class').then(response => {
       this.courses = response.data.courses;
@@ -89,14 +84,13 @@ export default {
     },
     getTerm: function() {
       axios.get(`api/terms?order=1&term=${this.year}${this.semester}`).then(response => {
-        this.term = response.data;
-        this.term = this.term[0];
+        this.term = response.data[0];
+        this.termCourses = this.term.courses;
       });
-      this.getCourses();
-      this.getTermCourses(this.term.id);
     },
     getTermCourses: function() {
       axios.get(`api/terms/${this.term.id}/courses`).then(response => {
+        console.log(`${this.year}  ${this.semester}`);
         this.termCourses = response.data; 
       });
     },
@@ -111,9 +105,14 @@ export default {
     },
     addCourse: function(theCourse) {
       axios.post(`api/course_terms?course_id=${theCourse.id}&term_id=${this.term.id}`).then(response => {
-        this.getTermCourses();
+        this.getTerm();
       });
     },
+    removeCourse: function(theCourse) {
+      axios.delete(`api/course_terms/${this.term.id}/${theCourse.id}`).then(response => {
+        this.getTerm();
+      });
+    }
   }
 };
 </script>
