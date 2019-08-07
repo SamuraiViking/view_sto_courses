@@ -29,4 +29,34 @@
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
+#availableCourse {
+  margin: 0px auto;
+  width: 800px;
+  display:flex;
+  justify-content: space-between;
+}
+
+#availableCourse div {
+  /*width: 150px;*/
+}
+
+#names {
+  width: 300px;
+}
+
+#times {
+  width: 130px;
+  /*background: blue;*/
+}
+
+#change-year button {
+  /*border-radius: 100%;*/
+}
+
+.course-attribute {
+  width: 150px;
+}
+
+
 </style>
