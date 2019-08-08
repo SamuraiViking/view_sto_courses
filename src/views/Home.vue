@@ -35,18 +35,22 @@
     <div>
       <!-- Department Selector -->
       <form>
-        <select v-model="selected">
-          <option v-for="option in options" v-bind:value="option.value">
-            {{ option.text }}
+        <select v-model="departmentParam">
+          <option v-for="department in departments" v-bind:value="department.value">
+            {{ department.text }}
           </option>
         </select>
-        <span>Selected: {{ selected }}</span>
       </form>
-<!--       <div v-for="param in courseParams">
-        <button>{{ param }}</button>
-      </div> -->
+      <!-- Types Selector -->
+      <form>
+        <select v-model="typeParam">
+          <option v-for="type in types" v-bind:value="type.value">
+            {{ type.text }}
+          </option>
+        </select>
+      </form>
       <!-- Search Button -->
-      <button v-on:click="paramDepart()">Search</button>
+      <button v-on:click="selectedCourses()">Search</button>
     </div>
 
     <!-- Display Courses -->
@@ -92,17 +96,21 @@ export default {
       termCourses: '',
       term: '',
       coursesAvaiable: true,
-      selected: '',
-      courseParams: {
-        term: '',
-        type: '',
-        department: '',
-        level: '',
-        days: '',
-        status: '',
-        name: ''
-      },
-      options: [
+
+      // Params
+      departmentParam: '',
+      typeParam: '',
+
+      // Select Options
+      types: [
+        {text: 'all types', value: 'all'},
+        {text: 'lab', value: 'lab'},
+        {text: 'class', value: 'class'},
+        {text: 'IS', value: 'IS'},
+        {text: 'IR', value: 'IR'},
+      ],
+      departments: [
+        {text: "all departments", value: "all"},
         {text: "africa and the americas", value: "AFAM"},
         // {text: "alternate language study option", value: "ALSO"},
         {text: "american con", value: "AMCON"},
@@ -173,7 +181,7 @@ export default {
       this.term = response.data[0];
       this.termCourses = this.term.courses;
     });
-    axios.get('api/courses?type=class').then(response => {
+    axios.get('api/courses?term=20191&type=class').then(response => {
       this.courses = response.data.courses;
     });
   },
@@ -223,9 +231,25 @@ export default {
         this.getTerm();
       });
     },
-    paramDepart: function() {
-      axios.get(`api/courses?term=${this.year}${this.semester}&type=class&department=${this.selected}`).then(response => {
-        console.log(this.selected);
+    selectedCourses: function() {
+      var term = 20191;
+      var url = 'api/courses?';
+
+      var test = {
+        term: term,
+        type: this.typeParam,
+        department: this.departmentParam
+      };
+
+      Object.keys(test).forEach(function(key) {
+        if (test[key]) {
+          url += (`${key}=${test[key]}&`);
+        }
+      });
+
+      url = url.slice(0, -1);
+
+      axios.get(url).then(response => {
         this.courses = response.data.courses;
       });
     },
