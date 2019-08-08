@@ -49,6 +49,22 @@
           </option>
         </select>
       </form>
+      <!-- Days Selector -->
+      <form>
+        <select v-model="daysParam">
+          <option v-for="day in days" v-bind:value="day.value">
+            {{ day.text }}
+          </option>
+        </select>
+      </form>
+      <!-- Level Selector -->
+      <form>
+        <select v-model="levelParam">
+          <option v-for="level in levels" v-bind:value="level.value">
+            {{ level.text }}
+          </option>
+        </select>
+      </form>
       <!-- Search Button -->
       <button v-on:click="selectedCourses()">Search</button>
     </div>
@@ -60,6 +76,7 @@
         <!-- Display Course -->
         <div id="availableCourse">
             <div id="names"> {{ course.name }} </div>
+            <div>{{ course.department }} </div>
             <div> {{ course.days }} </div>
             <div id="times"> {{ course.times }} </div> 
             <div>{{ course.status }} </div>
@@ -100,17 +117,32 @@ export default {
       // Params
       departmentParam: '',
       typeParam: '',
+      daysParam: '',
+      levelParam: '',
 
       // Select Options
+      levels: [
+        {text: 'all levels', value: ''},
+        {text: '100', value: '100'},
+        {text: '200', value: '200'},
+        {text: '300', value: '300'}
+      ],
+      days: [
+        {text: 'all days', value: ''},
+        {text: 'MWF', value: 'MWF'},
+        {text: 'TTh', value: 'TTh'},
+        {text: 'M-F', value: 'M-F'},
+      ],
       types: [
-        {text: 'all types', value: 'all'},
-        {text: 'lab', value: 'lab'},
+        {text: 'all types', value: ''},
         {text: 'class', value: 'class'},
-        {text: 'IS', value: 'IS'},
-        {text: 'IR', value: 'IR'},
+        {text: 'lab', value: 'lab'},
+        {text: 'Independent Study', value: 'IS'},
+        {text: 'Independent Research', value: 'IR'},
+        {text: 'Academic Internship', value: 'AI'},
       ],
       departments: [
-        {text: "all departments", value: "all"},
+        {text: "all departments", value: ''},
         {text: "africa and the americas", value: "AFAM"},
         // {text: "alternate language study option", value: "ALSO"},
         {text: "american con", value: "AMCON"},
@@ -197,13 +229,13 @@ export default {
         this.semester += change;
       }
       this.getTerm();
-      this.getCourses();
+      this.selectedCourses();
     },
     changeYear: function(change) {
       if (this.year + change <= 2022 && this.year + change >= 2015) {
         this.year += change;
         this.getTerm();
-        this.getCourses();
+        this.selectedCourses();
       }
     },
     getTerm: function() {
@@ -232,22 +264,27 @@ export default {
       });
     },
     selectedCourses: function() {
-      var term = 20191;
-      var url = 'api/courses?';
+
+      var url = "api/courses?";
 
       var test = {
-        term: term,
+        term: `${this.year}${this.semester}`,
         type: this.typeParam,
-        department: this.departmentParam
+        department: this.departmentParam,
+        days: this.daysParam,
+        level: this.levelParam
       };
 
       Object.keys(test).forEach(function(key) {
-        if (test[key]) {
-          url += (`${key}=${test[key]}&`);
+        var value = test[key];
+        if (value) {
+          url += (`${key}=${value}&`);
         }
       });
 
       url = url.slice(0, -1);
+
+      console.log(url);
 
       axios.get(url).then(response => {
         this.courses = response.data.courses;
