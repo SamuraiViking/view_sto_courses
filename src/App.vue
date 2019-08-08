@@ -38,6 +38,7 @@
 }
 
 #availableCourse div {
+  margin: 0px 10px;
   /*width: 150px;*/
 }
 

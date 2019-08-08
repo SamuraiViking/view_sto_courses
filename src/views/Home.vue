@@ -65,6 +65,26 @@
           </option>
         </select>
       </form>
+
+      <!-- First Ge Selector -->
+      <form>
+        <select v-model="firstGeParam">
+          <option v-for="ge in ges" v-bind:value="ge.value">
+            {{ ge.text }}
+          </option>
+        </select>
+      </form>
+
+      <!-- Second Ge Param -->
+      <form>
+        <select v-model="secondGeParam">
+          <option v-for="ge in ges" v-bind:value="ge.value">
+            {{ ge.text }}
+          </option>
+        </select>
+      </form>
+
+
       <!-- Search Button -->
       <button v-on:click="selectedCourses()">Search</button>
     </div>
@@ -76,7 +96,7 @@
         <!-- Display Course -->
         <div id="availableCourse">
             <div id="names"> {{ course.name }} </div>
-            <div>{{ course.department }} </div>
+            <div id="gereqs">{{ course.gereqs }} </div>
             <div> {{ course.days }} </div>
             <div id="times"> {{ course.times }} </div> 
             <div>{{ course.status }} </div>
@@ -119,8 +139,30 @@ export default {
       typeParam: '',
       daysParam: '',
       levelParam: '',
+      firstGeParam: '',
+      secondGeParam: '',
 
       // Select Options
+      ges: [
+        {text: 'any GE', value: ''},
+        {text: 'WRI', value: 'WRI'},
+        {text: 'ALS-L', value: 'ALS-l'},
+        {text: 'AQR', value: 'AQR'},
+        {text: 'BTS-B', value: 'BTS-B'},
+        {text: 'BTS-T', value:'BTS-T'},
+        {text: 'EIN', value: 'EIN'},
+        {text: 'FOL', value: 'FOL'},
+        {text: 'FYW', value: 'FYW'},
+        {text: 'HBS', value: 'HBS'},
+        {text: 'HWC', value: 'HWC'},
+        {text: 'IST', value: 'IST'},
+        {text: 'MCD', value: 'MCD'},
+        {text: 'MCG', value: 'MCG'},
+        {text: 'ORC', value: 'ORC'},
+        {text: 'SED', value: 'SED'},
+        {text: 'SPM', value: 'SPM'},
+        {text: 'WRIT', value: 'WRIT'}
+      ],
       levels: [
         {text: 'all levels', value: ''},
         {text: '100', value: '100'},
@@ -267,12 +309,20 @@ export default {
 
       var url = "api/courses?";
 
+      var term = `${this.year}${this.semester}`;
+      var gereqs = this.firstGeParam;
+
+      if (this.secondGeParam) {
+        gereqs += ',' + this.secondGeParam;
+      }
+
       var test = {
-        term: `${this.year}${this.semester}`,
+        term: term,
         type: this.typeParam,
         department: this.departmentParam,
         days: this.daysParam,
-        level: this.levelParam
+        level: this.levelParam,
+        gereqs: gereqs
       };
 
       Object.keys(test).forEach(function(key) {
