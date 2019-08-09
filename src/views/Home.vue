@@ -3,6 +3,7 @@
 
     <!-- Planner -->
     <div id="planner">
+      <h1>{{ errors }}</h1>
       <!-- Display Term -->
       <div id="show-term">
         {{ term.year }} {{ term.semester }}
@@ -95,17 +96,20 @@
         <hr>
         <!-- Display Course -->
         <div id="availableCourse">
-            <div id="names"> {{ course.name }} </div>
-            <div id="gereqs">{{ course.gereqs }} </div>
-            <div> {{ course.days }} </div>
-            <div id="times"> {{ course.times }} </div> 
             <div>{{ course.status }} </div>
+            <div>{{ course.level }} </div>
+            <div id="times"> {{ course.times }} </div> 
+            <div> {{ course.days }} </div>
+            <div id="gereqs">{{ course.gereqs }} </div>
+            <div id="names"> {{ course.name }} </div>
             <div><button v-on:click="addCourse(course)">Add Course</button></div>
-            <div><button v-on:click="addCourse(course)">more info</button></div>
-            <!-- More info -->
-            <div v-if="moreInfo">
-              <div>{{ course.description }}</div>
-            </div>
+            <div><button v-on:click="moreInfo()">more info</button></div>
+        </div>
+        <!-- More Info -->
+        <div v-if="moreCourseInfo(course)">
+          <div>{{ course.description }} </div>
+          <div>{{ course.prerequisites }} </div>
+          <div>{{ course.notes }} </div>
         </div>
       </div>
       <!-- No courses found message -->
@@ -125,14 +129,15 @@ import axios from "axios";
 export default {
   data: function() {
     return {
+      errors: [],
       message: "Welcome to Vue.js!",
-      moreInfo: false,
       year: 2019,
       semester: 1,
       courses: [],
       termCourses: '',
       term: '',
       coursesAvaiable: true,
+      theCourse: '',
 
       // Params
       departmentParam: '',
@@ -298,6 +303,9 @@ export default {
     addCourse: function(theCourse) {
       axios.post(`api/course_terms?course_id=${theCourse.id}&term_id=${this.term.id}`).then(response => {
         this.getTerm();
+      }).catch(error => {
+        console.log(error.response);
+        this.errors = "You already have that class!";
       });
     },
     removeCourse: function(theCourse) {
@@ -343,6 +351,12 @@ export default {
     noCourses: function() {
       console.log(`Length: ${this.courses.length}`);
       return this.courses.length === 0;
+    },
+    moreInfo: function(course) {
+      this.theCourse = course;
+    },
+    moreCourseInfo: function(course) {
+      return this.theCourse === course;
     }
   }
 };
