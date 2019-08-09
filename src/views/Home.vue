@@ -92,7 +92,12 @@
 
     <!-- Display Courses -->
     <div id="availableCourses">
-      <div v-if="coursesAvaiable" v-for="course in courses">
+      <p><input type="text" v-model="daysSearch" list="name"></p>
+      <datalist id="name">
+        <option v-for="course in courses">{{ course.name }}</option>
+<!--         <option v-for="ge in ges">{{ ge.text }}</option> -->
+      </datalist>
+      <div v-if="coursesAvaiable" v-for="course in filterBy(courses, daysSearch, 'name')">
         <hr>
         <!-- Display Course -->
         <div id="availableCourse">
@@ -125,8 +130,10 @@
 
 <script>
 import axios from "axios";
+import Vue2Filters from "vue2-filters";
 
 export default {
+  mixins: [Vue2Filters.mixin],
   data: function() {
     return {
       errors: [],
@@ -138,6 +145,7 @@ export default {
       term: '',
       coursesAvaiable: true,
       theCourse: '',
+      daysSearch: '',
 
       // Params
       departmentParam: '',
