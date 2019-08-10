@@ -12,8 +12,8 @@
       <div id="change-term">
         <div id="change-semester">
           Semester
-          <button v-on:click="changeSemester(-1)"> < </button>
-          <button v-on:click="changeSemester(1)"> > </button>
+          <button v-on:click="changeSemester(-1)"><</button>
+          <button v-on:click="changeSemester(1)">></button>
         </div>
         <div id="change-year">
           Year:
@@ -31,10 +31,7 @@
         <button v-on:click="removeCourse(course)"> Remove Course </button>
       </div>
     </div>
-
     <hr>
-
-
     <!-- Selectors -->
     <div>
       <!-- Department Selector -->
@@ -95,6 +92,7 @@
           <option>level</option>
           <option>num_ratings</option>
           <option>difficulty</option>
+          <option>rating</option>
         </select>
       </form>
 
@@ -105,19 +103,19 @@
 
     <!-- Display Courses -->
     <div id="availableCourses">
-      <p><input type="text" v-model="daysSearch" list="name"></p>
+      <p><input type="text" v-model="nameSearch" list="name"></p>
       <datalist id="name">
         <option v-for="course in courses">{{ course.name }}</option>
-<!--         <option v-for="ge in ges">{{ ge.text }}</option> -->
       </datalist>
-      <!-- <div v-if="coursesAvaiable" v-for="course in filterBy(courses, daysSearch, 'name')"> -->
-      <div v-if="coursesAvaiable" v-for="course in filterBy(orderBy(courses, sortAttribute), daysSearch, 'name')">
+      <div v-if="coursesAvaiable" v-for="course in filterByParams()">
         <hr>
         <!-- Display Course -->
         <div id="availableCourse">
             <div>{{ course.status }} </div>
             <!-- <div>{{ course.level }} </div> -->
             <div id="times"> {{ course.times }} </div> 
+            <div> {{ course.course_type }} </div> 
+            <div> {{ course.department }} </div> 
             <div> {{ course.days }} </div>
             <div id="gereqs">{{ course.gereqs }} </div>
             <div id="names"> {{ course.name }} </div>
@@ -164,7 +162,7 @@ export default {
       term: '',
       coursesAvaiable: true,
       theCourse: '',
-      daysSearch: '',
+      nameSearch: '',
 
       // Params
       departmentParam: '',
@@ -288,7 +286,7 @@ export default {
       this.term = response.data[0];
       this.termCourses = this.term.courses;
     });
-    axios.get('api/courses?term=20191&type=class').then(response => {
+    axios.get('api/courses?term=20191').then(response => {
       this.courses = response.data.courses;
     });
   },
@@ -341,8 +339,25 @@ export default {
         this.getTerm();
       });
     },
-    filterByParams: function () {
+    filterByParams: function() {
+      var paramsList = [
+        {key: "department",value: this.departmentParam},
+        {key: "course_type",value: this.typeParam},
+        {key: "days",value: this.daysParam},
+        {key: "level",value: this.levelParam},
+        {key: "gereqs",value: this.firstGeParam},
+      ];
 
+      var courses = this.courses;
+      for (var i = 0; i < paramsList.length; i++) {
+        if (paramsList[i]['value']) {
+          courses = this.filterBy(courses, paramsList[i]['value'], paramsList[i]['key']);
+        }
+      }
+
+      courses = this.orderBy(courses, this.sortAttribute);
+
+      return courses;
     },
     selectedCourses: function() {
 
