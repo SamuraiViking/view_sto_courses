@@ -24,7 +24,10 @@
       </div>
       <!-- User Term Courses -->
       <div v-for="course in termCourses">
-        {{ course.name }} {{ course.days }} {{ course.times }}
+        <div> {{ course.name }} </div>
+        <div> {{course.instructors }} </div>
+        <div> {{ course.times }} </div>
+        <div> {{ course.days }} </div>
         <button v-on:click="removeCourse(course)"> Remove Course </button>
       </div>
     </div>
@@ -90,6 +93,8 @@
         <select v-model="sortAttribute">
           <option>num_of_ges</option>
           <option>level</option>
+          <option>num_ratings</option>
+          <option>difficulty</option>
         </select>
       </form>
 
@@ -111,14 +116,18 @@
         <!-- Display Course -->
         <div id="availableCourse">
             <div>{{ course.status }} </div>
-            <div>{{ course.level }} </div>
+            <!-- <div>{{ course.level }} </div> -->
             <div id="times"> {{ course.times }} </div> 
             <div> {{ course.days }} </div>
             <div id="gereqs">{{ course.gereqs }} </div>
             <div id="names"> {{ course.name }} </div>
+            <div> {{course.instructors }} </div>
             <div> {{ course.rating }} </div>
+            <div> {{ course.difficulty }} </div>
+            <div> {{ course.num_ratings }} </div>
+            <!-- <div> {{ course.url }} </div> -->
             <div><button v-on:click="addCourse(course)">Add Course</button></div>
-            <div><button v-on:click="moreInfo()">more info</button></div>
+            <div><button v-on:click="moreInfo(course)">more info</button></div>
         </div>
         <!-- More Info -->
         <div v-if="moreCourseInfo(course)">
@@ -372,9 +381,15 @@ export default {
       return this.courses.length === 0;
     },
     moreInfo: function(course) {
-      this.theCourse = course;
+      console.log(course);
+      if (this.theCourse !== course) {
+        this.theCourse = course;
+      } else {
+        this.theCourse = '';
+      }
     },
     moreCourseInfo: function(course) {
+      console.log("this is running for some reason");
       return this.theCourse === course;
     }
   }
