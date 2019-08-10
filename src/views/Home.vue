@@ -85,6 +85,14 @@
         </select>
       </form>
 
+      <!-- sort -->
+      <form>
+        <select v-model="sortAttribute">
+          <option>num_of_ges</option>
+          <option>level</option>
+        </select>
+      </form>
+
 
       <!-- Search Button -->
       <button v-on:click="selectedCourses()">Search</button>
@@ -97,7 +105,8 @@
         <option v-for="course in courses">{{ course.name }}</option>
 <!--         <option v-for="ge in ges">{{ ge.text }}</option> -->
       </datalist>
-      <div v-if="coursesAvaiable" v-for="course in filterBy(courses, daysSearch, 'name')">
+      <!-- <div v-if="coursesAvaiable" v-for="course in filterBy(courses, daysSearch, 'name')"> -->
+      <div v-if="coursesAvaiable" v-for="course in orderBy(courses, sortAttribute)">
         <hr>
         <!-- Display Course -->
         <div id="availableCourse">
@@ -107,6 +116,7 @@
             <div> {{ course.days }} </div>
             <div id="gereqs">{{ course.gereqs }} </div>
             <div id="names"> {{ course.name }} </div>
+            <div> {{ course.rating }} </div>
             <div><button v-on:click="addCourse(course)">Add Course</button></div>
             <div><button v-on:click="moreInfo()">more info</button></div>
         </div>
@@ -154,6 +164,7 @@ export default {
       levelParam: '',
       firstGeParam: '',
       secondGeParam: '',
+      sortAttribute: '',
 
       // Select Options
       ges: [
