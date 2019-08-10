@@ -111,7 +111,7 @@
 <!--         <option v-for="ge in ges">{{ ge.text }}</option> -->
       </datalist>
       <!-- <div v-if="coursesAvaiable" v-for="course in filterBy(courses, daysSearch, 'name')"> -->
-      <div v-if="coursesAvaiable" v-for="course in orderBy(courses, sortAttribute)">
+      <div v-if="coursesAvaiable" v-for="course in filterBy(orderBy(courses, sortAttribute), daysSearch, 'name')">
         <hr>
         <!-- Display Course -->
         <div id="availableCourse">
@@ -341,6 +341,9 @@ export default {
         this.getTerm();
       });
     },
+    filterByParams: function () {
+
+    },
     selectedCourses: function() {
 
       var url = "api/courses?";
@@ -389,7 +392,6 @@ export default {
       }
     },
     moreCourseInfo: function(course) {
-      console.log("this is running for some reason");
       return this.theCourse === course;
     }
   }
