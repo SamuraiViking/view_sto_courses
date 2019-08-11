@@ -10,6 +10,10 @@
 </template>
 
 <style>
+
+.table-font {
+  font-size: 12px;
+}
 /*#app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

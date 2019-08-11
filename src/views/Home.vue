@@ -1,10 +1,6 @@
 <template>
   <div class="home">
 
-    <div class="alert alert-primary" role="alert">
-      A simple primary alert—check it out!
-    </div>
-
     <!-- Planner -->
     <div id="planner">
       <h1>{{ errors }}</h1>
@@ -73,7 +69,7 @@
 
       <!-- First Ge1 Selector -->
       <form>
-        <select v-model="geParam">
+        <select v-model="ge1Param">
           <option v-for="ge in ges" v-bind:value="ge.value">
             {{ ge.text }}
           </option>
@@ -98,6 +94,8 @@
       </form>
     </div>
 
+    <b-table striped hover :items="items" :fields="fields"></b-table>
+
 
     <!-- Search Bar -->
 <!--     <div>    
@@ -105,28 +103,7 @@
       <datalist id="name"><option v-for="course in filteredCourses">{{ course.name }}</option></datalist>
     </div> -->
 
-    <div id="column-names">
-      <div>Status</div>
-      <div>Dept</div>
-      <div>Num</div>
-      <div>Sec</div>
-      <div>Name</div>
-      <div>Cred</div>
-      <div>Ge's</div>
-      <div>Enrolled</div>
-      <div>Max</div>
-      <div>Days</div>
-      <div>Times</div>
-      <div>Loc</div>
-      <div>Prof</div>
-      <div>Rating</div>
-      <div>Difficulty</div>
-      <div>Reviews</div>
-      <div></div>
-      <div></div>
-    </div>
-
-    <div>
+<!--     <div>
       <button v-on:click="setSortAttribute('status')">Status</button>
       <button v-on:click="setSortAttribute('department')">Dept</button>
       <button v-on:click="setSortAttribute('number')">Num</button>
@@ -143,42 +120,52 @@
       <button v-on:click="setSortAttribute('rating')">Rating</button>
       <button v-on:click="setSortAttribute('difficulty')">Difficulty</button>
       <button v-on:click="setSortAttribute('num_reviews')">Reviews</button>
-    </div>
-    
-    <!-- Display Courses -->
-    <div id="availableCourses">
-      <div v-for="course in filterByParams()">
-        <hr>
-        <!-- Display Course -->
-        <div id="availableCourse">
-            <div> {{ course.status }} </div>
-            <div> {{ course.department }} </div> 
-            <div> {{ course.number }}</div>
-            <div> {{ course.section }} </div>
-            <div> {{ course.name }} </div>
-            <div> {{ course.credits }} </div>
-            <div> {{ course.gereqs }} </div>
-            <div> {{ course.enrolled }}</div>
-            <div> {{ course.max }}</div>
-            <div> {{ course.days }} </div>
-            <div> {{ course.times }} </div> 
-            <div> {{ course.location }}</div>
-            <div> {{ course.instructors }} </div>
-            <div> {{ course.rating }} </div>
-            <div> {{ course.difficulty }} </div>
-            <div> {{ course.num_ratings }} </div>
-            <div><button v-on:click="addCourse(course)">Add Course</button></div>
-            <div><button v-on:click="moreInfo(course)">more info</button></div>
-        </div>
-        <!-- More Info -->
-        <div v-if="moreCourseInfo(course)">
-          <div> {{ course.description }} </div>
-          <div> {{ course.prerequisites }} </div>
-          <div> {{ course.notes }} </div>
-          <div> {{ course.prof_url }} </div>
-        </div>
-      </div>
-    </div>
+    </div> -->
+
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th @click="doSomething('status')" scope="col">Status</th>
+          <th scope="col" v-on:click="setSortAttribute('department')">Dept</th>
+          <!-- <th scope="col" v-on:click="setSortAttribute('number')">Num</th> -->
+          <!-- <th scope="col" v-on:click="setSortAttribute('section')">Sec</th> -->  
+          <th scope="col" v-on:click="setSortAttribute('name')">Name</th>
+          <!-- <th scope="col" v-on:click="setSortAttribute('credits')">Cred</th> -->
+          <th scope="col" v-on:click="setSortAttribute('num_of_ges')">Ge</th>
+          <!-- <th scope="col" v-on:click="setSortAttribute('enrolled')">Enrolled</th> -->
+          <!-- <th scope="col" v-on:click="setSortAttribute('max')">Max</th> -->
+          <th scope="col" v-on:click="setSortAttribute('days')">Days</th>
+          <th scope="col" v-on:click="setSortAttribute('times')">Times</th>
+          <!-- <th scope="col" v-on:click="setSortAttribute('location')">Loc</th> -->
+          <th scope="col" v-on:click="setSortAttribute('instructors')">Prof</th>
+          <th scope="col" v-on:click="setSortAttribute('rating')">Rating</th>
+          <th scope="col" v-on:click="setSortAttribute('difficulty')">Difficulty</th>
+          <th scope="col" v-on:click="setSortAttribute('num_ratings')">Reviews</th>
+        </tr>
+      </thead>
+      <tbody v-for="course in filterByParams()">
+        <tr class="table-font">
+          <th> {{ course.status }} </th>
+          <th> {{ course.department }} {{ course.number }}{{ course.section }} </th> 
+          <!-- <th> {{ course.number }}</th> -->
+          <!-- <th> {{ course.section }} </th> -->
+          <th> {{ course.name }} </th>
+          <!-- <th> {{ course.credits }} </th> -->
+          <th> {{ course.gereqs }} </th>
+          <!-- <th> {{ course.enrolled }}</th> -->
+          <!-- <th> {{ course.max }}</th> -->
+          <th> {{ course.days }} </th>
+          <th> {{ course.times }} </th> 
+          <!-- <th> {{ course.location }}</th> -->
+          <th> {{ course.instructors }} </th>
+          <th> {{ course.rating }} </th>
+          <th> {{ course.difficulty }} </th>
+          <th> {{ course.num_ratings }} </th>
+          <th><button v-on:click="addCourse(course)"> + </button></th>
+          <th><button v-on:click="moreInfo(course)">more</button></th>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
@@ -193,6 +180,15 @@ export default {
   mixins: [Vue2Filters.mixin],
   data: function() {
     return {
+
+      fields: ['first_name', 'last_name', 'age'],
+      items: [
+        { isActive: true, age: 40, first_name: 'Dickerson', last_name: 'Macdonald' },
+        { isActive: false, age: 21, first_name: 'Larsen', last_name: 'Shaw' },
+        { isActive: false, age: 89, first_name: 'Geneva', last_name: 'Wilson' },
+        { isActive: true, age: 38, first_name: 'Jami', last_name: 'Carney' }
+      ],
+
       errors: [],
       year: 2019,
       semester: 1,
@@ -211,7 +207,7 @@ export default {
       typeParam: 'class',
       daysParam: '',
       levelParam: '',
-      geParam: '',
+      ge1Param: '',
       ge2Param: '',
       secondGeParam: '',
       sortAttribute: '',
@@ -258,11 +254,11 @@ export default {
         {text: 'Academic Internship', value: 'AI'},
       ],
       departments: [
+        // {text: "alternate language study option", value: "ALSO"},
+        // {text: "american racial and multicultural studies", value: "ARMS"},
         {text: "all departments", value: ''},
         {text: "africa and the americas", value: "AFAM"},
-        // {text: "alternate language study option", value: "ALSO"},
         {text: "american conversation", value: "AMCON"},
-        // {text: "american racial and multicultural studies", value: "ARMS"},
         {text: "american studies", value: "AMST"},
         {text: "art and art history", value: "ART"},
         {text: "asian studies", value: "ASIAN"},
@@ -333,6 +329,9 @@ export default {
     });
   },
   methods: {
+    doSomething: function(word) {
+      console.log(word);
+    },
     changeSemester: function(change) {
       if (this.semester + change > 5 && this.year < 2022) {
         this.year += 1;
@@ -384,7 +383,7 @@ export default {
         {key: "course_type",value: this.typeParam},
         {key: "days",value: this.daysParam},
         {key: "level",value: this.levelParam},
-        {key: "gereqs",value: this.geParam},
+        {key: "gereqs",value: this.ge1Param},
         {key: "gereqs", value: this.ge2Param}
       ];
 
@@ -394,8 +393,9 @@ export default {
           filteredCourses = this.filterBy(filteredCourses, paramsList[i]['value'], paramsList[i]['key']);
         }
       }
+
       // filteredCourses = this.filterBy(this.allTermCourses, this.nameSearch, 'name');
-      filteredCourses = this.orderBy(filteredCourses, this.sortAttribute);
+      filteredCourses = this.orderBy(filteredCourses, this.sortAttribute, -1);
       return filteredCourses;
     },
     setSortAttribute: function(attribute) {
