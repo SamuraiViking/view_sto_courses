@@ -1,12 +1,16 @@
 <template>
   <div class="home">
 
+    <div class="alert alert-primary" role="alert">
+      A simple primary alert—check it out!
+    </div>
+
     <!-- Planner -->
     <div id="planner">
       <h1>{{ errors }}</h1>
       <!-- Display Term -->
       <div id="show-term">
-        {{ term.year }} {{ term.semester }}
+        {{ userTerm.year }} {{ userTerm.semester }}
       </div>
       <!-- Change Term -->
       <div id="change-term">
@@ -23,7 +27,7 @@
     <hr>
       </div>
       <!-- User Term Courses -->
-      <div v-for="course in termCourses">
+      <div v-for="course in userTermCourses">
         <div> {{ course.name }} </div>
         <div> {{course.instructors }} </div>
         <div> {{ course.times }} </div>
@@ -67,53 +71,83 @@
         </select>
       </form>
 
-      <!-- First Ge Selector -->
+      <!-- First Ge1 Selector -->
       <form>
-        <select v-model="firstGeParam">
+        <select v-model="geParam">
           <option v-for="ge in ges" v-bind:value="ge.value">
             {{ ge.text }}
           </option>
         </select>
       </form>
 
-      <!-- Second Ge Param -->
+      <!-- First Ge2 Selector -->
       <form>
-        <select v-model="secondGeParam">
+        <select v-model="ge2Param">
           <option v-for="ge in ges" v-bind:value="ge.value">
             {{ ge.text }}
           </option>
         </select>
       </form>
 
-      <!-- sort -->
+      <!-- First Ge2 Selector -->
       <form>
-        <select v-model="sortAttribute">
-          <option>num_of_ges</option>
-          <option>level</option>
-          <option>num_ratings</option>
-          <option>difficulty</option>
-          <option>rating</option>
+        <select v-model="statusParam">
+          <option>C</option>
+          <option>O</option>
         </select>
-        <button>Name</button>
-        <button>Gereqs</button>
-        <button>Times</button>
-        <button>Department</button>
-        <button>Level</button>
-        <button></button>
       </form>
-
-
-      <!-- Search Button -->
-      <button v-on:click="selectedCourses()">Search</button>
     </div>
 
+
+    <!-- Search Bar -->
+<!--     <div>    
+      <p><input type="text" v-model="nameSearch" list="name"></p>
+      <datalist id="name"><option v-for="course in filteredCourses">{{ course.name }}</option></datalist>
+    </div> -->
+
+    <div id="column-names">
+      <div>Status</div>
+      <div>Dept</div>
+      <div>Num</div>
+      <div>Sec</div>
+      <div>Name</div>
+      <div>Cred</div>
+      <div>Ge's</div>
+      <div>Enrolled</div>
+      <div>Max</div>
+      <div>Days</div>
+      <div>Times</div>
+      <div>Loc</div>
+      <div>Prof</div>
+      <div>Rating</div>
+      <div>Difficulty</div>
+      <div>Reviews</div>
+      <div></div>
+      <div></div>
+    </div>
+
+    <div>
+      <button v-on:click="setSortAttribute('status')">Status</button>
+      <button v-on:click="setSortAttribute('department')">Dept</button>
+      <button v-on:click="setSortAttribute('number')">Num</button>
+      <button v-on:click="setSortAttribute('section')">Sec</button>
+      <button v-on:click="setSortAttribute('name')">Name</button>
+      <button v-on:click="setSortAttribute('credits')">Cred</button>
+      <button v-on:click="setSortAttribute('num_of_ges')">Ge</button>
+      <button v-on:click="setSortAttribute('enrolled')">Enrolled</button>
+      <button v-on:click="setSortAttribute('max')">Max</button>
+      <button v-on:click="setSortAttribute('days')">Days</button>
+      <button v-on:click="setSortAttribute('times')">Times</button>
+      <button v-on:click="setSortAttribute('location')">Loc</button>
+      <button v-on:click="setSortAttribute('instructors')">Prof</button>
+      <button v-on:click="setSortAttribute('rating')">Rating</button>
+      <button v-on:click="setSortAttribute('difficulty')">Difficulty</button>
+      <button v-on:click="setSortAttribute('num_reviews')">Reviews</button>
+    </div>
+    
     <!-- Display Courses -->
     <div id="availableCourses">
-      <p><input type="text" v-model="nameSearch" list="name"></p>
-      <datalist id="name">
-        <option v-for="course in courses">{{ course.name }}</option>
-      </datalist>
-      <div v-if="coursesAvaiable" v-for="course in filterByParams()">
+      <div v-for="course in filterByParams()">
         <hr>
         <!-- Display Course -->
         <div id="availableCourse">
@@ -138,15 +172,11 @@
         </div>
         <!-- More Info -->
         <div v-if="moreCourseInfo(course)">
-          <div>{{ course.description }} </div>
-          <div>{{ course.prerequisites }} </div>
-          <div>{{ course.notes }} </div>
+          <div> {{ course.description }} </div>
+          <div> {{ course.prerequisites }} </div>
+          <div> {{ course.notes }} </div>
           <div> {{ course.prof_url }} </div>
         </div>
-      </div>
-      <!-- No courses found message -->
-      <div v-if="noCourses()">
-        <p>Not yet available</p>
       </div>
     </div>
   </div>
@@ -164,22 +194,25 @@ export default {
   data: function() {
     return {
       errors: [],
-      message: "Welcome to Vue.js!",
       year: 2019,
       semester: 1,
-      courses: [],
-      termCourses: '',
-      term: '',
-      coursesAvaiable: true,
-      theCourse: '',
+      userTerm: '',
+      statusParam: '',
+
+      allTermCourses: [],
+      userTermCourses: [],
+      filteredCourses: [],
+
+      moreInfoCourse: '',
       nameSearch: '',
 
       // Params
       departmentParam: '',
-      typeParam: '',
+      typeParam: 'class',
       daysParam: '',
       levelParam: '',
-      firstGeParam: '',
+      geParam: '',
+      ge2Param: '',
       secondGeParam: '',
       sortAttribute: '',
 
@@ -187,7 +220,8 @@ export default {
       ges: [
         {text: 'any GE', value: ''},
         {text: 'WRI', value: 'WRI'},
-        {text: 'ALS-L', value: 'ALS-l'},
+        {text: 'ALS-L', value: 'ALS-L'},
+        {text: 'ALS-A', value: 'ALS-A'},
         {text: 'AQR', value: 'AQR'},
         {text: 'BTS-B', value: 'BTS-B'},
         {text: 'BTS-T', value:'BTS-T'},
@@ -217,7 +251,6 @@ export default {
         {text: 'M-F', value: 'M-F'},
       ],
       types: [
-        {text: 'all types', value: ''},
         {text: 'class', value: 'class'},
         {text: 'lab', value: 'lab'},
         {text: 'Independent Study', value: 'IS'},
@@ -228,7 +261,6 @@ export default {
         {text: "all departments", value: ''},
         {text: "africa and the americas", value: "AFAM"},
         // {text: "alternate language study option", value: "ALSO"},
-        {text: "american con", value: "AMCON"},
         {text: "american conversation", value: "AMCON"},
         // {text: "american racial and multicultural studies", value: "ARMS"},
         {text: "american studies", value: "AMST"},
@@ -253,7 +285,7 @@ export default {
         {text: "french", value: "FREN"},
         {text: "gender studies", value: "WMGST"},
         {text: "german", value: "GERM"},
-        {text: "great con", value: "GCON"},
+        {text: "great conversation", value: "GCON"},
         {text: "greek", value: "GREEK"},
         {text: "hispanic studies", value: "HSPST"},
         {text: "history", value: "HIST"},
@@ -293,11 +325,11 @@ export default {
   },
   created: function() {
     axios.get(`api/terms?order=1&term=${this.year}${this.semester}`).then(response => {
-      this.term = response.data[0];
-      this.termCourses = this.term.courses;
+      this.userTerm = response.data[0];
+      this.userTermCourses = this.userTerm.courses;
     });
-    axios.get('api/courses?term=20191').then(response => {
-      this.courses = response.data.courses;
+    axios.get("api/courses?term=20191&").then(response => {
+      this.allTermCourses = response.data.courses;
     });
   },
   methods: {
@@ -311,114 +343,77 @@ export default {
       } else if (this.semester + change <= 5 && this.semester + change >= 1) {
         this.semester += change;
       }
-      this.getTerm();
-      this.selectedCourses();
+      this.getUserTermCourses();
+      this.getTermCourses();
     },
     changeYear: function(change) {
       if (this.year + change <= 2022 && this.year + change >= 2015) {
         this.year += change;
-        this.getTerm();
-        this.selectedCourses();
+        this.getUserTermCourses();
+        this.getTermCourses();
       }
     },
-    getTerm: function() {
+    getUserTermCourses: function() {
       axios.get(`api/terms?order=1&term=${this.year}${this.semester}`).then(response => {
-        this.term = response.data[0];
-        this.termCourses = this.term.courses;
+        this.userTerm = response.data[0];
+        this.userTermCourses = this.userTerm.courses;
       });
     },
-    getCourses: function() {
-      axios.get(`api/courses?term=${this.year}${this.semester}&type=class`).then(response => {
-        this.coursesAvaiable = true;
-        this.courses = response.data.courses;
-        if (this.courses.length === 0) {
-          this.coursesAvaiable = false;
-        }
+    getTermCourses: function() {
+      axios.get(`api/courses?term=${this.year}${this.semester}`).then(response => {
+        this.allTermCourses = response.data.courses; 
       });
     },
     addCourse: function(theCourse) {
-      axios.post(`api/course_terms?course_id=${theCourse.id}&term_id=${this.term.id}`).then(response => {
-        this.getTerm();
+      axios.post(`api/course_terms?course_id=${theCourse.id}&term_id=${this.userTerm.id}`).then(response => {
+        this.getUserTermCourses();
       }).catch(error => {
         console.log(error.response);
         this.errors = "You already have that class!";
       });
     },
     removeCourse: function(theCourse) {
-      axios.delete(`api/course_terms/${this.term.id}/${theCourse.id}`).then(response => {
-        this.getTerm();
+      axios.delete(`api/course_terms/${this.userTerm.id}/${theCourse.id}`).then(response => {
+        this.getUserTermCourses();
       });
     },
     filterByParams: function() {
       var paramsList = [
+        {key: "status", value: this.statusParam },
         {key: "department",value: this.departmentParam},
         {key: "course_type",value: this.typeParam},
         {key: "days",value: this.daysParam},
         {key: "level",value: this.levelParam},
-        {key: "gereqs",value: this.firstGeParam},
+        {key: "gereqs",value: this.geParam},
+        {key: "gereqs", value: this.ge2Param}
       ];
 
-      var courses = this.courses;
+      var filteredCourses = this.allTermCourses;
       for (var i = 0; i < paramsList.length; i++) {
         if (paramsList[i]['value']) {
-          courses = this.filterBy(courses, paramsList[i]['value'], paramsList[i]['key']);
+          filteredCourses = this.filterBy(filteredCourses, paramsList[i]['value'], paramsList[i]['key']);
         }
       }
-
-      courses = this.orderBy(courses, this.sortAttribute);
-
-      return courses;
+      // filteredCourses = this.filterBy(this.allTermCourses, this.nameSearch, 'name');
+      filteredCourses = this.orderBy(filteredCourses, this.sortAttribute);
+      return filteredCourses;
     },
-    selectedCourses: function() {
-
-      var url = "api/courses?";
-
-      var term = `${this.year}${this.semester}`;
-      var gereqs = this.firstGeParam;
-
-      if (this.secondGeParam) {
-        gereqs += ',' + this.secondGeParam;
-      }
-
-      var test = {
-        term: term,
-        type: this.typeParam,
-        department: this.departmentParam,
-        days: this.daysParam,
-        level: this.levelParam,
-        gereqs: gereqs
-      };
-
-      Object.keys(test).forEach(function(key) {
-        var value = test[key];
-        if (value) {
-          url += (`${key}=${value}&`);
-        }
-      });
-
-      url = url.slice(0, -1);
-
-      console.log(url);
-
-      axios.get(url).then(response => {
-        this.courses = response.data.courses;
-      });
+    setSortAttribute: function(attribute) {
+      this.sortAttribute = attribute;
     },
-    noCourses: function() {
-      console.log(`Length: ${this.courses.length}`);
-      return this.courses.length === 0;
-    },
-    moreInfo: function(course) {
-      console.log(course);
-      if (this.theCourse !== course) {
-        this.theCourse = course;
+    moreInfo: function(theCourse) {
+      if (this.moreInfoCourse !== theCourse) {
+        this.moreInfoCourse = theCourse;
       } else {
-        this.theCourse = '';
+        this.moreInfoCourse = '';
       }
     },
-    moreCourseInfo: function(course) {
-      return this.theCourse === course;
+    moreCourseInfo: function(theCourse) {
+      return this.moreInfoCourse === theCourse;
     }
   }
 };
 </script>
+
+
+

@@ -10,7 +10,7 @@
 </template>
 
 <style>
-#app {
+/*#app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -23,14 +23,6 @@
 
 #nav a {
   font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-
-#availableCourse {
   overflow: scroll;
   margin: 0px auto;
   width: 100%;
@@ -41,8 +33,22 @@
 #availableCourse div {
   width: 100%;
   font-size: 15px;
-  /*background: blue;*/
 }
+
+#column-names {
+  display: flex;
+}
+
+#column-names div {
+  width: 100%;
+}  color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+  color: #42b983;
+}
+*/
+
 
 
 </style>
