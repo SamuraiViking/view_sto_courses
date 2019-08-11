@@ -8,11 +8,24 @@
     <router-view/>
   </div>
 </template>
-
 <style>
+
+span {
+  margin: 0px;
+  padding: 0px;
+}
 
 .table-font {
   font-size: 12px;
+}
+
+.flex {
+  padding: 0px;
+  line-height: 1px;
+  border: 10px hidden;
+  display: flex;
+  margin: 0px;
+  /*padding: 0px;*/
 }
 /*#app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -52,7 +65,5 @@
   color: #42b983;
 }
 */
-
-
 
 </style>

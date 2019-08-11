@@ -85,7 +85,7 @@
         </select>
       </form>
 
-      <!-- First Ge2 Selector -->
+      <!-- First status Selector -->
       <form>
         <select v-model="statusParam">
           <option>C</option>
@@ -96,41 +96,21 @@
 
     <b-table striped hover :items="items" :fields="fields"></b-table>
 
-
     <!-- Search Bar -->
 <!--     <div>    
       <p><input type="text" v-model="nameSearch" list="name"></p>
       <datalist id="name"><option v-for="course in filteredCourses">{{ course.name }}</option></datalist>
     </div> -->
 
-<!--     <div>
-      <button v-on:click="setSortAttribute('status')">Status</button>
-      <button v-on:click="setSortAttribute('department')">Dept</button>
-      <button v-on:click="setSortAttribute('number')">Num</button>
-      <button v-on:click="setSortAttribute('section')">Sec</button>
-      <button v-on:click="setSortAttribute('name')">Name</button>
-      <button v-on:click="setSortAttribute('credits')">Cred</button>
-      <button v-on:click="setSortAttribute('num_of_ges')">Ge</button>
-      <button v-on:click="setSortAttribute('enrolled')">Enrolled</button>
-      <button v-on:click="setSortAttribute('max')">Max</button>
-      <button v-on:click="setSortAttribute('days')">Days</button>
-      <button v-on:click="setSortAttribute('times')">Times</button>
-      <button v-on:click="setSortAttribute('location')">Loc</button>
-      <button v-on:click="setSortAttribute('instructors')">Prof</button>
-      <button v-on:click="setSortAttribute('rating')">Rating</button>
-      <button v-on:click="setSortAttribute('difficulty')">Difficulty</button>
-      <button v-on:click="setSortAttribute('num_reviews')">Reviews</button>
-    </div> -->
-
     <table class="table table-hover">
       <thead>
         <tr>
           <th @click="doSomething('status')" scope="col">Status</th>
-          <th scope="col" v-on:click="setSortAttribute('department')">Dept</th>
+          <th v-if="showColumn('department')" scope="col" v-on:click="setSortAttribute('department')">Dept</th>
           <!-- <th scope="col" v-on:click="setSortAttribute('number')">Num</th> -->
-          <!-- <th scope="col" v-on:click="setSortAttribute('section')">Sec</th> -->  
+          <!-- <th scope="col" v-on:click="setSortAttribute('section')">Sec</th>   -->
           <th scope="col" v-on:click="setSortAttribute('name')">Name</th>
-          <!-- <th scope="col" v-on:click="setSortAttribute('credits')">Cred</th> -->
+          <th scope="col" v-on:click="setSortAttribute('credits')">Cred</th>
           <th scope="col" v-on:click="setSortAttribute('num_of_ges')">Ge</th>
           <!-- <th scope="col" v-on:click="setSortAttribute('enrolled')">Enrolled</th> -->
           <!-- <th scope="col" v-on:click="setSortAttribute('max')">Max</th> -->
@@ -150,15 +130,14 @@
           <!-- <th> {{ course.number }}</th> -->
           <!-- <th> {{ course.section }} </th> -->
           <th> {{ course.name }} </th>
-          <!-- <th> {{ course.credits }} </th> -->
-          <th> {{ course.gereqs }} </th>
+          <th> {{ course.credits }} </th>
+          <th style="width:70px"> {{ course.gereqs }} </th>
+          <th> {{ course.days }} </th>
           <!-- <th> {{ course.enrolled }}</th> -->
           <!-- <th> {{ course.max }}</th> -->
-          <th> {{ course.days }} </th>
-          <th> {{ course.times }} </th> 
-          <!-- <th> {{ course.location }}</th> -->
-          <th> {{ course.instructors }} </th>
-          <th> {{ course.rating }} </th>
+          <th style="width:120px"> {{ course.times }} </th>
+          <th style="width:120px"> {{ course.instructors }}</th>
+          <th> {{ course.rating }}</th>
           <th> {{ course.difficulty }} </th>
           <th> {{ course.num_ratings }} </th>
           <th><button v-on:click="addCourse(course)"> + </button></th>
@@ -180,14 +159,6 @@ export default {
   mixins: [Vue2Filters.mixin],
   data: function() {
     return {
-
-      fields: ['first_name', 'last_name', 'age'],
-      items: [
-        { isActive: true, age: 40, first_name: 'Dickerson', last_name: 'Macdonald' },
-        { isActive: false, age: 21, first_name: 'Larsen', last_name: 'Shaw' },
-        { isActive: false, age: 89, first_name: 'Geneva', last_name: 'Wilson' },
-        { isActive: true, age: 38, first_name: 'Jami', last_name: 'Carney' }
-      ],
 
       errors: [],
       year: 2019,
@@ -329,6 +300,11 @@ export default {
     });
   },
   methods: {
+    showColumn: function(column) {
+      if (column === 'department') {
+        return true;
+      }
+    },
     doSomething: function(word) {
       console.log(word);
     },
