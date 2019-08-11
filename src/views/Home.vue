@@ -104,44 +104,48 @@
 
     <table class="table table-hover">
       <thead>
-        <tr>
-          <th @click="doSomething('status')" scope="col">Status</th>
-          <th v-if="showColumn('department')" scope="col" v-on:click="setSortAttribute('department')">Dept</th>
+        <tr class="custom-table-head">
+          <th scope="col" v-on:click="setSortAttribute('status')">     St</th>
+          <th scope="col" v-on:click="setSortAttribute('credits')">    Cr</th>
+          <th scope="col" v-on:click="setSortAttribute('department')"> Dept</th>
+          <th scope="col" v-on:click="setSortAttribute('name')">       Name</th>
+          <th scope="col" v-on:click="setSortAttribute('num_of_ges')"> GE</th>
+          <th scope="col" v-on:click="setSortAttribute('days')">       D</th>
+          <th scope="col" v-on:click="setSortAttribute('times')">      T</th>
+          <th scope="col" v-on:click="setSortAttribute('enrolled')">   Seats</th>
+          <th scope="col" v-on:click="setSortAttribute('instructors')">Prof</th>
+          <th scope="col" v-on:click="setSortAttribute('rating')">     Reviews</th>
+          <th scope="col" v-on:click="setSortAttribute('difficulty')"> Difficulty</th>
+          <th scope="col" v-on:click="setSortAttribute('num_ratings')">Rating</th>
           <!-- <th scope="col" v-on:click="setSortAttribute('number')">Num</th> -->
           <!-- <th scope="col" v-on:click="setSortAttribute('section')">Sec</th>   -->
-          <th scope="col" v-on:click="setSortAttribute('name')">Name</th>
-          <th scope="col" v-on:click="setSortAttribute('credits')">Cred</th>
-          <th scope="col" v-on:click="setSortAttribute('num_of_ges')">Ge</th>
-          <!-- <th scope="col" v-on:click="setSortAttribute('enrolled')">Enrolled</th> -->
-          <!-- <th scope="col" v-on:click="setSortAttribute('max')">Max</th> -->
-          <th scope="col" v-on:click="setSortAttribute('days')">Days</th>
-          <th scope="col" v-on:click="setSortAttribute('times')">Times</th>
           <!-- <th scope="col" v-on:click="setSortAttribute('location')">Loc</th> -->
-          <th scope="col" v-on:click="setSortAttribute('instructors')">Prof</th>
-          <th scope="col" v-on:click="setSortAttribute('rating')">Rating</th>
-          <th scope="col" v-on:click="setSortAttribute('difficulty')">Difficulty</th>
-          <th scope="col" v-on:click="setSortAttribute('num_ratings')">Reviews</th>
+          <!-- <th style="max-width: 20px" scope="col"></th> -->
+          <!-- <th style="max-width: 20px" scope="col"></th> -->
         </tr>
       </thead>
       <tbody v-for="course in filterByParams()">
-        <tr class="table-font">
+        <tr class="custom-col">
           <th> {{ course.status }} </th>
-          <th> {{ course.department }} {{ course.number }}{{ course.section }} </th> 
+          <th style="width: 65px"> {{ course.credits }} </th>
+          <th style="width: 65px"> {{ course.department }} {{ course.number }}{{ course.section }} </th> 
+          <th style="max-width: 130px"> {{ course.name }} </th>
+          <th style="width: 65px"> {{ course.gereqs }} </th>
+          <th style="width: 10px"> {{ course.days }} </th>
+          <th style="width: 120px;min-width: 120px"> {{ course.times }} </th>
+          <th style="width: 80px"> {{ course.enrolled }} / {{ course.max }}</th>
+          <th style="max-width: 130px"> {{ course.instructors }}</th>
+          <th style="width: 65px"> {{ course.rating }} </th>
+          <th style="width: 65px"> {{ course.difficulty }} </th>
+          <th style="width: 65px"> {{ course.num_ratings }} </th>
           <!-- <th> {{ course.number }}</th> -->
           <!-- <th> {{ course.section }} </th> -->
-          <th> {{ course.name }} </th>
-          <th> {{ course.credits }} </th>
-          <th style="width:70px"> {{ course.gereqs }} </th>
-          <th> {{ course.days }} </th>
-          <!-- <th> {{ course.enrolled }}</th> -->
-          <!-- <th> {{ course.max }}</th> -->
-          <th style="width:120px"> {{ course.times }} </th>
-          <th style="width:120px"> {{ course.instructors }}</th>
-          <th> {{ course.rating }}</th>
-          <th> {{ course.difficulty }} </th>
-          <th> {{ course.num_ratings }} </th>
-          <th><button v-on:click="addCourse(course)"> + </button></th>
-          <th><button v-on:click="moreInfo(course)">more</button></th>
+          <th>
+            <div class="course-show-more"><img src="https://icon-library.net/images/3-line-menu-icon/3-line-menu-icon-3.jpg"></div>
+          </th>
+          <th>
+            <div class="course-show-more"><img src="https://icon-library.net/images/3-line-menu-icon/3-line-menu-icon-3.jpg"></div>
+          </th>
         </tr>
       </tbody>
     </table>
