@@ -31,32 +31,17 @@
 }
 
 #availableCourse {
+  overflow: scroll;
   margin: 0px auto;
-  width: 800px;
+  width: 100%;
   display:flex;
   justify-content: space-between;
 }
 
 #availableCourse div {
-  margin: 0px 10px;
-  /*width: 150px;*/
-}
-
-#names {
-  width: 300px;
-}
-
-#times {
-  width: 130px;
+  width: 100%;
+  font-size: 15px;
   /*background: blue;*/
-}
-
-#change-year button {
-  /*border-radius: 100%;*/
-}
-
-.course-attribute {
-  width: 150px;
 }
 
 

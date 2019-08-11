@@ -94,6 +94,12 @@
           <option>difficulty</option>
           <option>rating</option>
         </select>
+        <button>Name</button>
+        <button>Gereqs</button>
+        <button>Times</button>
+        <button>Department</button>
+        <button>Level</button>
+        <button></button>
       </form>
 
 
@@ -111,19 +117,22 @@
         <hr>
         <!-- Display Course -->
         <div id="availableCourse">
-            <div>{{ course.status }} </div>
-            <!-- <div>{{ course.level }} </div> -->
-            <div id="times"> {{ course.times }} </div> 
-            <div> {{ course.course_type }} </div> 
+            <div> {{ course.status }} </div>
             <div> {{ course.department }} </div> 
+            <div> {{ course.number }}</div>
+            <div> {{ course.section }} </div>
+            <div> {{ course.name }} </div>
+            <div> {{ course.credits }} </div>
+            <div> {{ course.gereqs }} </div>
+            <div> {{ course.enrolled }}</div>
+            <div> {{ course.max }}</div>
             <div> {{ course.days }} </div>
-            <div id="gereqs">{{ course.gereqs }} </div>
-            <div id="names"> {{ course.name }} </div>
-            <div> {{course.instructors }} </div>
+            <div> {{ course.times }} </div> 
+            <div> {{ course.location }}</div>
+            <div> {{ course.instructors }} </div>
             <div> {{ course.rating }} </div>
             <div> {{ course.difficulty }} </div>
             <div> {{ course.num_ratings }} </div>
-            <!-- <div> {{ course.url }} </div> -->
             <div><button v-on:click="addCourse(course)">Add Course</button></div>
             <div><button v-on:click="moreInfo(course)">more info</button></div>
         </div>
@@ -132,6 +141,7 @@
           <div>{{ course.description }} </div>
           <div>{{ course.prerequisites }} </div>
           <div>{{ course.notes }} </div>
+          <div> {{ course.prof_url }} </div>
         </div>
       </div>
       <!-- No courses found message -->
