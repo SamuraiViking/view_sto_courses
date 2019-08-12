@@ -15,6 +15,12 @@
   list-style-type: none;
 }
 
+#hideOptions {
+  line-height: 0px;
+  margin: 0px;
+  padding: 0px;
+}
+
 .col-seats {
   min-width: 80px;
 }

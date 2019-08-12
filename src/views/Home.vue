@@ -32,6 +32,25 @@
       </div>
     </div>
     <hr>
+
+    Hide: 
+    <div id="hideOptions">
+    <p>Status: <input type="checkbox" id="hideStatus" v-model="hideStatus"></p>
+    <p>Department: <input type="checkbox" id="hideDepartment" v-model="hideDepartment"></p>
+    <p>Credits: <input type="checkbox" id="hideCredits" v-model="hideCredits"></p>
+    <p>Name: <input type="checkbox" id="hideName" v-model="hideName"></p>
+    <p>Times: <input type="checkbox" id="hideTimes" v-model="hideTimes"></p>
+    <p>Seats: <input type="checkbox" id="hideSeats" v-model="hideSeats"></p>
+    <p>Prof: <input type="checkbox" id="hideProf" v-model="hideProf"></p>
+    <p>Difficulty: <input type="checkbox" id="hideDifficulty" v-model="hideDifficulty"></p>
+    <p>Reviews: <input type="checkbox" id="hideReviews" v-model="hideReviews"></p>
+    <p>Days: <input type="checkbox" id="hideReviews" v-model="hideDays"></p>
+    <p>Rating: <input type="checkbox" id="hideReviews" v-model="hideRating"></p>
+    <p>GE's: <input type="checkbox" id="hideReviews" v-model="hideGereqs"></p>
+
+    </div>
+
+
     <!-- Selectors -->
     <div class="flex">
       <!-- Department Selector -->
@@ -99,18 +118,18 @@
     <table class="table table-hover table-sm">
       <thead>
         <tr>
-          <th scope="col" v-on:click="setSortAttribute('status')">     St</th>
-          <th scope="col" v-on:click="setSortAttribute('credits')">    Cr</th>
-          <th scope="col" v-on:click="setSortAttribute('department')"> Dept</th>
-          <th scope="col" v-on:click="setSortAttribute('name')">       Name</th>
-          <th scope="col" v-on:click="setSortAttribute('num_of_ges')"> GE</th>
-          <th scope="col" v-on:click="setSortAttribute('days')">       D</th>
-          <th scope="col" v-on:click="setSortAttribute('times')">      T</th>
-          <th scope="col" v-on:click="setSortAttribute('enrolled')">   Seats</th>
-          <th scope="col" v-on:click="setSortAttribute('instructors')">Prof</th>
-          <th scope="col" v-on:click="setSortAttribute('rating')">Rating</th>
-          <th scope="col" v-on:click="setSortAttribute('difficulty')"> Difficulty</th>
-          <th scope="col" v-on:click="setSortAttribute('num_ratings')">     Reviews</th>
+          <th scope="col" v-if="shown('status')" v-on:click="setSortAttribute('status')">     St</th>
+          <th scope="col" v-if="shown('credits')" v-on:click="setSortAttribute('credits')">    Cr</th>
+          <th scope="col" v-if="shown('department')" v-on:click="setSortAttribute('department')"> Dept</th>
+          <th scope="col" v-if="shown('name')" v-on:click="setSortAttribute('name')">       Name</th>
+          <th scope="col" v-if="shown('gereqs')" v-on:click="setSortAttribute('num_of_ges')"> GE</th>
+          <th scope="col" v-if="shown('days')" v-on:click="setSortAttribute('days')">       D</th>
+          <th scope="col" v-if="shown('times')" v-on:click="setSortAttribute('times')">      T</th>
+          <th scope="col" v-if="shown('seats')" v-on:click="setSortAttribute('enrolled')">   Seats</th>
+          <th scope="col" v-if="shown('prof')" v-on:click="setSortAttribute('instructors')">Prof</th>
+          <th scope="col" v-if="shown('rating')" v-on:click="setSortAttribute('rating')">Rating</th>
+          <th scope="col" v-if="shown('difficulty')" v-on:click="setSortAttribute('difficulty')"> Difficulty</th>
+          <th scope="col" v-if="shown('reviews')" v-on:click="setSortAttribute('num_ratings')">     Reviews</th>
           <th scope="col" v-on:click="setSortAttribute('num_ratings')"></th>
           <th scope="col" v-on:click="setSortAttribute('num_ratings')"></th>
           <!-- <th scope="col" v-on:click="setSortAttribute('number')">Num</th> -->
@@ -122,41 +141,41 @@
       </thead>
       <tbody v-for="course in filterBy(filterByParams(), paramName, 'name')">
         <tr>
-          <th scope="row"> 
+          <th v-if="shown('status')" scope="row"> 
             <span v-if="courseOpen(course.status)" class="green">O</span>
             <span v-if="courseClosed(course.status)" class="red">C</span>
           </th>
-          <td> {{ course.credits }} </td>
-          <td>
+          <td v-if="shown('credits')"> {{ course.credits }} </td>
+          <td v-if="!hideDepartment">
             {{ course.department }} {{ course.number }}{{ course.section }} 
           </td> 
-          <td> {{ course.name }} </td>
-          <td> 
+          <td v-if="shown('name')"> {{ course.name }} </td>
+          <td v-if="shown('gereqs')"> 
             <ul class="col-multi-line col-gereqs">
               <li v-for="(ge, index) in course.gereqs">
                 {{ ge }}
               </li>
             </ul>
           </td>
-          <td> {{ course.days }} </td>
-          <td>
+          <td v-if="shown('days')"> {{ course.days }} </td>
+          <td v-if="shown('times')">
             <ul class="col-multi-line col-times">
               <li v-for="(time, index) in course.times">
                 {{ time }}
               </li>
             </ul> 
           </td>
-          <td class="col-seats"> {{ course.seats }} </td>
-          <td> 
+          <td v-if="shown('seats')" class="col-seats"> {{ course.seats }} </td>
+          <td v-if="shown('prof')"> 
             <ul class="col-multi-line col-times">
               <li v-for="(prof, index) in course.instructors">
                 {{ prof }}
               </li>
             </ul> 
           </td>
-          <td> {{ course.rating }} </td>
-          <td> {{ course.difficulty }} </td>
-          <td> {{ course.num_ratings }} </td>
+          <td v-if="shown('rating')"> {{ course.rating }} </td>
+          <td v-if="shown('difficulty')"> {{ course.difficulty }} </td>
+          <td v-if="shown('reviews')"> {{ course.num_ratings }} </td>
           <!-- <th> {{ course.number }}</th> -->
           <!-- <th> {{ course.section }} </th> -->
           <td>
@@ -206,8 +225,29 @@ export default {
       secondGeParam: '',
       sortAttribute: '',
       paramName: '',
+      selected: [],
+
+      // Hide Options
+      hideStatus: false,
+      hideDepartment: false,
+      hideCredits: false,
+      hideName: false,
+      hideGereqs: false,
+      hideDays: false,
+      hideTimes: false,
+      hideSeats: false,
+      hideProf: false,
+      hideRating: false,
+      hideDifficulty: false,
+      hideReviews: false,
 
       // Select Options
+      showOptions: [
+        { text: 'Orange', value: 'orange' },
+        { text: 'Apple', value: 'apple' },
+        { text: 'Pineapple', value: 'pineapple' },
+        { text: 'Grape', value: 'grape' }
+      ],
       statuses: [
         {text: 'Any Status', value: ''},
         {text: 'Open', value: 'O'},
@@ -420,6 +460,23 @@ export default {
     },
     courseClosed: function(status) {
       return status === 'C';
+    },
+    shown: function(column) {
+      var columnShowStatus = {
+        'status': this.hideStatus,
+        'credits': this.hideCredits,
+        'name': this.hideName,
+        'department': this.hideDepartment,
+        'gereqs': this.hideGereqs,
+        'days': this.hideDays,
+        'times': this.hideTimes,
+        'seats': this.hideSeats,
+        'prof': this.hideProf,
+        'rating': this.hideRating,
+        'difficulty': this.hideDifficulty,
+        'reviews': this.hideReviews,
+      };
+      return !columnShowStatus[column];
     }
   }
 };
