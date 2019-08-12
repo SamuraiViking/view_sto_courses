@@ -33,7 +33,7 @@
     </div>
     <hr>
     <!-- Selectors -->
-    <div>
+    <div class="flex">
       <!-- Department Selector -->
       <form>
         <select v-model="departmentParam">
@@ -94,17 +94,9 @@
       </form>
     </div>
 
-    <b-table striped hover :items="items" :fields="fields"></b-table>
-
-    <!-- Search Bar -->
-<!--     <div>    
-      <p><input type="text" v-model="nameSearch" list="name"></p>
-      <datalist id="name"><option v-for="course in filteredCourses">{{ course.name }}</option></datalist>
-    </div> -->
-
-    <table class="table table-hover">
+    <table class="table table-hover table-sm">
       <thead>
-        <tr class="custom-table-head">
+        <tr>
           <th scope="col" v-on:click="setSortAttribute('status')">     St</th>
           <th scope="col" v-on:click="setSortAttribute('credits')">    Cr</th>
           <th scope="col" v-on:click="setSortAttribute('department')"> Dept</th>
@@ -114,9 +106,11 @@
           <th scope="col" v-on:click="setSortAttribute('times')">      T</th>
           <th scope="col" v-on:click="setSortAttribute('enrolled')">   Seats</th>
           <th scope="col" v-on:click="setSortAttribute('instructors')">Prof</th>
-          <th scope="col" v-on:click="setSortAttribute('rating')">     Reviews</th>
+          <th scope="col" v-on:click="setSortAttribute('rating')">Rating</th>
           <th scope="col" v-on:click="setSortAttribute('difficulty')"> Difficulty</th>
-          <th scope="col" v-on:click="setSortAttribute('num_ratings')">Rating</th>
+          <th scope="col" v-on:click="setSortAttribute('num_ratings')">     Reviews</th>
+          <th scope="col" v-on:click="setSortAttribute('num_ratings')"></th>
+          <th scope="col" v-on:click="setSortAttribute('num_ratings')"></th>
           <!-- <th scope="col" v-on:click="setSortAttribute('number')">Num</th> -->
           <!-- <th scope="col" v-on:click="setSortAttribute('section')">Sec</th>   -->
           <!-- <th scope="col" v-on:click="setSortAttribute('location')">Loc</th> -->
@@ -124,28 +118,65 @@
           <!-- <th style="max-width: 20px" scope="col"></th> -->
         </tr>
       </thead>
+<!--       
+<ul id="example-2">
+  <li v-for="(item, index) in items">
+    {{ parentMessage }} - {{ index }} - {{ item.message }}
+  </li>
+</ul>
+ --> 
       <tbody v-for="course in filterByParams()">
-        <tr class="custom-col">
-          <th> {{ course.status }} </th>
-          <th style="width: 65px"> {{ course.credits }} </th>
-          <th style="width: 65px"> {{ course.department }} {{ course.number }}{{ course.section }} </th> 
-          <th style="max-width: 130px"> {{ course.name }} </th>
-          <th style="width: 65px"> {{ course.gereqs }} </th>
-          <th style="width: 10px"> {{ course.days }} </th>
-          <th style="width: 120px;min-width: 120px"> {{ course.times }} </th>
-          <th style="width: 80px"> {{ course.enrolled }} / {{ course.max }}</th>
-          <th style="max-width: 130px"> {{ course.instructors }}</th>
-          <th style="width: 65px"> {{ course.rating }} </th>
-          <th style="width: 65px"> {{ course.difficulty }} </th>
-          <th style="width: 65px"> {{ course.num_ratings }} </th>
+        <tr>
+          <th scope="row"> 
+            <span v-if="courseOpen(course.status)" class="green">O</span>
+            <span v-if="courseClosed(course.status)" class="red">C</span>
+          </th>
+          <td> {{ course.credits }} </td>
+          <td>
+            {{ course.department }} {{ course.number }}{{ course.section }}
+<!--             
+            <ul class="col-multi-line col-dept-num-sec">
+              <li v-for="(value, index) in course.dept_num_sec">
+                {{ value }}
+              </li>
+            </ul>
+ -->          
+          </td> 
+          <td> {{ course.name }} </td>
+          <td> 
+            <ul class="col-multi-line col-ges">
+              <li v-for="(ge, index) in course.gereqs">
+                {{ ge }}
+              </li>
+            </ul>
+          </td>
+          <td> {{ course.days }} </td>
+          <td>
+            <ul class="col-multi-line col-times">
+              <li v-for="(time, index) in course.times">
+                {{ time }}
+              </li>
+            </ul> 
+          </td>
+          <td class="col-seats"> {{ course.seats }} </td>
+          <td> 
+            <ul class="col-multi-line col-times">
+              <li v-for="(prof, index) in course.instructors">
+                {{ prof }}
+              </li>
+            </ul> 
+          </td>
+          <td> {{ course.rating }} </td>
+          <td> {{ course.difficulty }} </td>
+          <td> {{ course.num_ratings }} </td>
           <!-- <th> {{ course.number }}</th> -->
           <!-- <th> {{ course.section }} </th> -->
-          <th>
-            <div class="course-show-more"><img src="https://icon-library.net/images/3-line-menu-icon/3-line-menu-icon-3.jpg"></div>
-          </th>
-          <th>
-            <div class="course-show-more"><img src="https://icon-library.net/images/3-line-menu-icon/3-line-menu-icon-3.jpg"></div>
-          </th>
+          <td>
+            <div @click="addCourse(course)">Add</div>
+          </td>
+          <td>
+            <div class="course-show-more">More Info</div>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -374,7 +405,6 @@ export default {
         }
       }
 
-      // filteredCourses = this.filterBy(this.allTermCourses, this.nameSearch, 'name');
       filteredCourses = this.orderBy(filteredCourses, this.sortAttribute, -1);
       return filteredCourses;
     },
@@ -390,6 +420,12 @@ export default {
     },
     moreCourseInfo: function(theCourse) {
       return this.moreInfoCourse === theCourse;
+    },
+    courseOpen: function(status) {
+      return status === 'O';
+    },
+    courseClosed: function(status) {
+      return status === 'C';
     }
   }
 };

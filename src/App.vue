@@ -9,36 +9,41 @@
   </div>
 </template>
 <style>
-
-.table-font {
-  font-size: 12px;
-  font-color: #eee;
+.col-multi-line {
+  min-width: 50px;
+  word-break: keep-all;
+  margin: 0px;
+  padding: 0px;
+  list-style-type: none;
 }
 
-.custom-table-head {
-  font-size: 12px;
+.col-seats {
+  /*background: blue;*/
+  min-width: 80px;
+}
+.col-gereqs {
+  min-width: 50px;
 }
 
-.course-show-more {
-  width: 30px;
-  height: 30px;
+.col-times {
+  min-width: 100px;
 }
 
-.course-show-more img{
-  width: 100%;
-  height: 100%;
+.green {
+  color: green;
 }
 
-.couse-show-more:hover {
-  background: blue;
+.red {
+  color: red;
 }
 
-.custom-col {
-  font-size: 12px;
-  width: 100%;
+.grey {
+  background-color: #fff;
+  /*border-color: red;*/
 }
 
-.course-buttons {
+.flex {
   display: flex;
 }
+
 </style>
