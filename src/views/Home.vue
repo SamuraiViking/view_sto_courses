@@ -35,6 +35,7 @@
     <!-- Selectors -->
     <div class="flex">
       <!-- Department Selector -->
+      <p>Name: <input type="text" v-model="paramName"></p>
       <form>
         <select v-model="departmentParam">
           <option v-for="department in departments" v-bind:value="department.value">
@@ -88,6 +89,7 @@
       <!-- First status Selector -->
       <form>
         <select v-model="statusParam">
+          <option></option>
           <option>C</option>
           <option>O</option>
         </select>
@@ -118,14 +120,7 @@
           <!-- <th style="max-width: 20px" scope="col"></th> -->
         </tr>
       </thead>
-<!--       
-<ul id="example-2">
-  <li v-for="(item, index) in items">
-    {{ parentMessage }} - {{ index }} - {{ item.message }}
-  </li>
-</ul>
- --> 
-      <tbody v-for="course in filterByParams()">
+      <tbody v-for="course in filterBy(filterByParams(), paramName, 'name')">
         <tr>
           <th scope="row"> 
             <span v-if="courseOpen(course.status)" class="green">O</span>
@@ -133,18 +128,11 @@
           </th>
           <td> {{ course.credits }} </td>
           <td>
-            {{ course.department }} {{ course.number }}{{ course.section }}
-<!--             
-            <ul class="col-multi-line col-dept-num-sec">
-              <li v-for="(value, index) in course.dept_num_sec">
-                {{ value }}
-              </li>
-            </ul>
- -->          
+            {{ course.department }} {{ course.number }}{{ course.section }} 
           </td> 
           <td> {{ course.name }} </td>
           <td> 
-            <ul class="col-multi-line col-ges">
+            <ul class="col-multi-line col-gereqs">
               <li v-for="(ge, index) in course.gereqs">
                 {{ ge }}
               </li>
@@ -217,6 +205,7 @@ export default {
       ge2Param: '',
       secondGeParam: '',
       sortAttribute: '',
+      paramName: '',
 
       // Select Options
       ges: [

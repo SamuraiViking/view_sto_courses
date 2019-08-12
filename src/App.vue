@@ -10,18 +10,16 @@
 </template>
 <style>
 .col-multi-line {
-  min-width: 50px;
-  word-break: keep-all;
   margin: 0px;
   padding: 0px;
   list-style-type: none;
 }
 
 .col-seats {
-  /*background: blue;*/
   min-width: 80px;
 }
 .col-gereqs {
+  /*background: blue;*/
   min-width: 50px;
 }
 
@@ -35,11 +33,6 @@
 
 .red {
   color: red;
-}
-
-.grey {
-  background-color: #fff;
-  /*border-color: red;*/
 }
 
 .flex {
