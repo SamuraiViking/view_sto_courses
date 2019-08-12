@@ -89,9 +89,9 @@
       <!-- First status Selector -->
       <form>
         <select v-model="statusParam">
-          <option></option>
-          <option>C</option>
-          <option>O</option>
+          <option v-for="status in statuses" v-bind:value="status.value">
+            {{ status.text }}
+          </option>
         </select>
       </form>
     </div>
@@ -208,6 +208,11 @@ export default {
       paramName: '',
 
       // Select Options
+      statuses: [
+        {text: 'Any Status', value: ''},
+        {text: 'Open', value: 'O'},
+        {text: 'Closed', value: 'C'},
+      ],
       ges: [
         {text: 'any GE', value: ''},
         {text: 'WRI', value: 'WRI'},
