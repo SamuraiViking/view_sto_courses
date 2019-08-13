@@ -1,14 +1,11 @@
 <template>
   <div class="home">
-
     <!-- Planner -->
-    <div id="planner">
+<!--     <div id="planner">
       <h1>{{ errors }}</h1>
-      <!-- Display Term -->
       <div id="show-term">
         {{ userTerm.year }} {{ userTerm.semester }}
       </div>
-      <!-- Change Term -->
       <div id="change-term">
         <div id="change-semester">
           Semester
@@ -20,9 +17,7 @@
           <button v-if="year > 2015" v-on:click="changeYear(-1)"> < </button>
           <button v-on:click="changeYear(1)"> > </button>
         </div>
-    <hr>
       </div>
-      <!-- User Term Courses -->
       <div v-for="course in userTermCourses">
         <div> {{ course.name }} </div>
         <div> {{course.instructors }} </div>
@@ -30,106 +25,192 @@
         <div> {{ course.days }} </div>
         <button v-on:click="removeCourse(course)"> Remove Course </button>
       </div>
-    </div>
-    <hr>
+    </div> -->
 
-    Hide: 
-    <div id="hideOptions">
-    <p>Status: <input type="checkbox" id="hideStatus" v-model="hideStatus"></p>
-    <p>Department: <input type="checkbox" id="hideDepartment" v-model="hideDepartment"></p>
-    <p>Credits: <input type="checkbox" id="hideCredits" v-model="hideCredits"></p>
-    <p>Name: <input type="checkbox" id="hideName" v-model="hideName"></p>
-    <p>Times: <input type="checkbox" id="hideTimes" v-model="hideTimes"></p>
-    <p>Seats: <input type="checkbox" id="hideSeats" v-model="hideSeats"></p>
-    <p>Prof: <input type="checkbox" id="hideProf" v-model="hideProf"></p>
-    <p>Difficulty: <input type="checkbox" id="hideDifficulty" v-model="hideDifficulty"></p>
-    <p>Reviews: <input type="checkbox" id="hideReviews" v-model="hideReviews"></p>
-    <p>Days: <input type="checkbox" id="hideReviews" v-model="hideDays"></p>
-    <p>Rating: <input type="checkbox" id="hideReviews" v-model="hideRating"></p>
-    <p>GE's: <input type="checkbox" id="hideReviews" v-model="hideGereqs"></p>
 
-    </div>
+<!--     <label>
+      Status
+      <toggle-button style="width:300px;" v-model="hideStatus" 
+                     :value="true"
+                     :labels="{checked: 'On', unchecked: 'Off'}"/>
+    </label> -->
 
+<!--   <div>
+    <form>
+      <label>
+        Credits
+        <toggle-button v-model="hideCredits" 
+                       :value="true"
+                       :labels="{checked: 'On', unchecked: 'Off'}"/>
+      </label>
+    </form>
+
+    <form>
+      <label>
+        Times
+        <toggle-button v-model="hideTimes" 
+                       :value="true"
+                       :labels="{checked: 'On', unchecked: 'Off'}"/>
+      </label>
+    </form>
+
+    <form>
+      <label>
+        Seats
+        <toggle-button v-model="hideSeats" 
+                       :value="true"
+                       :labels="{checked: 'On', unchecked: 'Off'}"/>
+      </label>
+    </form>
+
+    <form>    
+      <label>
+        Prof
+        <toggle-button v-model="hideProf" 
+                       :value="true"
+                       :labels="{checked: 'On', unchecked: 'Off'}"/>
+      </label>
+    </form>
+
+    <form>    
+      <label>
+        Difficulty
+        <toggle-button v-model="hideDifficulty" 
+                       :value="true"
+                       :labels="{checked: 'On', unchecked: 'Off'}"/>
+      </label>
+    </form>
+
+    <form>    
+      <label>
+        Reviews
+        <toggle-button v-model="hideReviews" 
+                       :value="true"
+                       :labels="{checked: 'On', unchecked: 'Off'}"/>
+      </label>
+    </form>
+
+    <form>    
+      <label>
+        Days
+        <toggle-button v-model="hideDays" 
+                       :value="true"
+                       :labels="{checked: 'On', unchecked: 'Off'}"/>
+      </label>
+    </form>
+
+    <form>    
+      <label>
+        Rating
+        <toggle-button v-model="hideRating" 
+                       :value="true"
+                       :labels="{checked: 'On', unchecked: 'Off'}"/>
+      </label>
+    </form>
+
+    <form>
+      <label>
+        GE's
+        <toggle-button v-model="hideGereqs" 
+                       :value="true"
+                       :labels="{checked: 'On', unchecked: 'Off'}"/>
+      </label>
+    </form>
+  </div> -->
 
     <!-- Selectors -->
-    <div class="flex">
-      <!-- Department Selector -->
-      <p>Name: <input type="text" v-model="paramName"></p>
-      <form>
-        <select v-model="departmentParam">
-          <option v-for="department in departments" v-bind:value="department.value">
-            {{ department.text }}
-          </option>
-        </select>
-      </form>
-      <!-- Types Selector -->
-      <form>
-        <select v-model="typeParam">
-          <option v-for="type in types" v-bind:value="type.value">
-            {{ type.text }}
-          </option>
-        </select>
-      </form>
-      <!-- Days Selector -->
-      <form>
-        <select v-model="daysParam">
-          <option v-for="day in days" v-bind:value="day.value">
-            {{ day.text }}
-          </option>
-        </select>
-      </form>
-      <!-- Level Selector -->
-      <form>
-        <select v-model="levelParam">
-          <option v-for="level in levels" v-bind:value="level.value">
-            {{ level.text }}
-          </option>
-        </select>
-      </form>
+    <div id="selectors" class="flex">
+      <div id="selector-labels">
+        <p>Name: </p>
+        <p>Department:</p>
+        <p>Class:</p>
+        <p>Days:</p>
+        <p>Level:</p>
+        <p>1st GE:</p>
+        <p>2nd GE:</p>
+        <p>Status:</p>
+      </div>
 
-      <!-- First Ge1 Selector -->
-      <form>
-        <select v-model="ge1Param">
-          <option v-for="ge in ges" v-bind:value="ge.value">
-            {{ ge.text }}
-          </option>
-        </select>
-      </form>
+      <div id="selector-bars">
+        <!-- Department Selector -->
 
-      <!-- First Ge2 Selector -->
-      <form>
-        <select v-model="ge2Param">
-          <option v-for="ge in ges" v-bind:value="ge.value">
-            {{ ge.text }}
-          </option>
-        </select>
-      </form>
+        <form>
+          <select v-model="filters.department">
+            <option v-for="department in departments" v-bind:value="department.value">
+              {{ department.text }}
+            </option>
+          </select>
+        </form>
 
-      <!-- First status Selector -->
-      <form>
-        <select v-model="statusParam">
-          <option v-for="status in statuses" v-bind:value="status.value">
-            {{ status.text }}
-          </option>
-        </select>
-      </form>
+        <!-- Types Selector -->
+        <form>
+          <select v-model="filters.type">
+            <option v-for="type in types" v-bind:value="type.value">
+              {{ type.text }}
+            </option>
+          </select>
+        </form>
+        <!-- Days Selector -->
+        <form>
+          <select v-model="filters.days">
+            <option v-for="day in days" v-bind:value="day.value">
+              {{ day.text }}
+            </option>
+          </select>
+        </form>
+        <!-- Level Selector -->
+        <form>
+          <select v-model="filters.level">
+            <option v-for="level in levels" v-bind:value="level.value">
+              {{ level.text }}
+            </option>
+          </select>
+        </form>
+
+        <!-- First Ge1 Selector -->
+        <form>
+          <select v-model="filters.ge1">
+            <option v-for="ge in ges" v-bind:value="ge.value">
+              {{ ge.text }}
+            </option>
+          </select>
+        </form>
+
+        <!-- First Ge2 Selector -->
+        <form>
+          <select v-model="filters.ge2">
+            <option v-for="ge in ges" v-bind:value="ge.value">
+              {{ ge.text }}
+            </option>
+          </select>
+        </form>
+
+        <!-- First status Selector -->
+        <form>
+          <select v-model="filters.status">
+            <option v-for="status in statuses" v-bind:value="status.value">
+              {{ status.text }}
+            </option>
+          </select>
+        </form>
+      </div>
     </div>
 
     <table class="table table-hover table-sm">
       <thead>
         <tr>
-          <th scope="col" v-if="shown('status')" v-on:click="setSortAttribute('status')">     St</th>
-          <th scope="col" v-if="shown('credits')" v-on:click="setSortAttribute('credits')">    Cr</th>
-          <th scope="col" v-if="shown('department')" v-on:click="setSortAttribute('department')"> Dept</th>
-          <th scope="col" v-if="shown('name')" v-on:click="setSortAttribute('name')">       Name</th>
-          <th scope="col" v-if="shown('gereqs')" v-on:click="setSortAttribute('num_of_ges')"> GE</th>
-          <th scope="col" v-if="shown('days')" v-on:click="setSortAttribute('days')">       D</th>
-          <th scope="col" v-if="shown('times')" v-on:click="setSortAttribute('times')">      T</th>
-          <th scope="col" v-if="shown('seats')" v-on:click="setSortAttribute('enrolled')">   Seats</th>
-          <th scope="col" v-if="shown('prof')" v-on:click="setSortAttribute('instructors')">Prof</th>
-          <th scope="col" v-if="shown('rating')" v-on:click="setSortAttribute('rating')">Rating</th>
-          <th scope="col" v-if="shown('difficulty')" v-on:click="setSortAttribute('difficulty')"> Difficulty</th>
-          <th scope="col" v-if="shown('reviews')" v-on:click="setSortAttribute('num_ratings')">     Reviews</th>
+          <th scope="col" v-on:click="setSortAttribute('status')">     St</th>
+          <th scope="col" v-on:click="setSortAttribute('credits')">    Cr</th>
+          <th scope="col" v-on:click="setSortAttribute('department')"> Dept</th>
+          <th scope="col" v-on:click="setSortAttribute('name')">       Name</th>
+          <th scope="col" v-on:click="setSortAttribute('num_of_ges')"> GE</th>
+          <th scope="col" v-on:click="setSortAttribute('days')">       D</th>
+          <th scope="col" v-on:click="setSortAttribute('times')">      T</th>
+          <th scope="col" v-on:click="setSortAttribute('enrolled')">   Seats</th>
+          <th scope="col" v-on:click="setSortAttribute('instructors')">Prof</th>
+          <th scope="col" v-on:click="setSortAttribute('rating')">Rating</th>
+          <th scope="col" v-on:click="setSortAttribute('difficulty')"> Difficulty</th>
+          <th scope="col" v-on:click="setSortAttribute('num_ratings')">     Reviews</th>
           <th scope="col" v-on:click="setSortAttribute('num_ratings')"></th>
           <th scope="col" v-on:click="setSortAttribute('num_ratings')"></th>
           <!-- <th scope="col" v-on:click="setSortAttribute('number')">Num</th> -->
@@ -139,43 +220,43 @@
           <!-- <th style="max-width: 20px" scope="col"></th> -->
         </tr>
       </thead>
-      <tbody v-for="course in filterBy(filterByParams(), paramName, 'name')">
+      <tbody v-for="course in filterByParams()">
         <tr>
-          <th v-if="shown('status')" scope="row"> 
+          <th scope="row"> 
             <span v-if="courseOpen(course.status)" class="green">O</span>
             <span v-if="courseClosed(course.status)" class="red">C</span>
           </th>
-          <td v-if="shown('credits')"> {{ course.credits }} </td>
-          <td v-if="!hideDepartment">
+          <td> {{ course.credits }} </td>
+          <td>
             {{ course.department }} {{ course.number }}{{ course.section }} 
           </td> 
-          <td v-if="shown('name')"> {{ course.name }} </td>
-          <td v-if="shown('gereqs')"> 
+          <td> {{ course.name }} </td>
+          <td> 
             <ul class="col-multi-line col-gereqs">
               <li v-for="(ge, index) in course.gereqs">
                 {{ ge }}
               </li>
             </ul>
           </td>
-          <td v-if="shown('days')"> {{ course.days }} </td>
-          <td v-if="shown('times')">
+          <td> {{ course.days }} </td>
+          <td>
             <ul class="col-multi-line col-times">
               <li v-for="(time, index) in course.times">
                 {{ time }}
               </li>
             </ul> 
           </td>
-          <td v-if="shown('seats')" class="col-seats"> {{ course.seats }} </td>
-          <td v-if="shown('prof')"> 
+          <td class="col-seats"> {{ course.seats }} </td>
+          <td> 
             <ul class="col-multi-line col-times">
               <li v-for="(prof, index) in course.instructors">
                 {{ prof }}
               </li>
             </ul> 
           </td>
-          <td v-if="shown('rating')"> {{ course.rating }} </td>
-          <td v-if="shown('difficulty')"> {{ course.difficulty }} </td>
-          <td v-if="shown('reviews')"> {{ course.num_ratings }} </td>
+          <td> {{ course.rating }} </td>
+          <td> {{ course.difficulty }} </td>
+          <td> {{ course.num_ratings }} </td>
           <!-- <th> {{ course.number }}</th> -->
           <!-- <th> {{ course.section }} </th> -->
           <td>
@@ -201,45 +282,36 @@ export default {
   mixins: [Vue2Filters.mixin],
   data: function() {
     return {
-
       errors: [],
       year: 2019,
       semester: 1,
       userTerm: '',
-      statusParam: '',
+
+      user: {
+        year: 2019,
+        semester: 1,
+        term: 20191,
+        courses: []
+      },
 
       allTermCourses: [],
       userTermCourses: [],
-      filteredCourses: [],
 
       moreInfoCourse: '',
       nameSearch: '',
 
       // Params
-      departmentParam: '',
-      typeParam: 'class',
-      daysParam: '',
-      levelParam: '',
-      ge1Param: '',
-      ge2Param: '',
-      secondGeParam: '',
-      sortAttribute: '',
-      paramName: '',
-      selected: [],
-
-      // Hide Options
-      hideStatus: false,
-      hideDepartment: false,
-      hideCredits: false,
-      hideName: false,
-      hideGereqs: false,
-      hideDays: false,
-      hideTimes: false,
-      hideSeats: false,
-      hideProf: false,
-      hideRating: false,
-      hideDifficulty: false,
-      hideReviews: false,
+      filters: {
+        status: '',
+        department: '',
+        type: '',
+        days: '',
+        level: '',
+        ge1: '',
+        ge2: '',
+        sortBy: '',
+        name: ''
+      },
 
       // Select Options
       showOptions: [
@@ -369,14 +441,6 @@ export default {
     });
   },
   methods: {
-    showColumn: function(column) {
-      if (column === 'department') {
-        return true;
-      }
-    },
-    doSomething: function(word) {
-      console.log(word);
-    },
     changeSemester: function(change) {
       if (this.semester + change > 5 && this.year < 2022) {
         this.year += 1;
@@ -423,13 +487,13 @@ export default {
     },
     filterByParams: function() {
       var paramsList = [
-        {key: "status", value: this.statusParam },
-        {key: "department",value: this.departmentParam},
-        {key: "course_type",value: this.typeParam},
-        {key: "days",value: this.daysParam},
-        {key: "level",value: this.levelParam},
-        {key: "gereqs",value: this.ge1Param},
-        {key: "gereqs", value: this.ge2Param}
+        {key: "status", value: this.filters.status },
+        {key: "department",value: this.filters.department},
+        {key: "course_type",value: this.filters.type},
+        {key: "days",value: this.filters.days},
+        {key: "level",value: this.filters.level},
+        {key: "gereqs",value: this.filters.ge1},
+        {key: "gereqs", value: this.filters.ge2}
       ];
 
       var filteredCourses = this.allTermCourses;
@@ -461,26 +525,11 @@ export default {
     courseClosed: function(status) {
       return status === 'C';
     },
-    shown: function(column) {
-      var columnShowStatus = {
-        'status': this.hideStatus,
-        'credits': this.hideCredits,
-        'name': this.hideName,
-        'department': this.hideDepartment,
-        'gereqs': this.hideGereqs,
-        'days': this.hideDays,
-        'times': this.hideTimes,
-        'seats': this.hideSeats,
-        'prof': this.hideProf,
-        'rating': this.hideRating,
-        'difficulty': this.hideDifficulty,
-        'reviews': this.hideReviews,
-      };
-      return !columnShowStatus[column];
-    }
   }
 };
 </script>
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 
 

@@ -9,6 +9,19 @@
   </div>
 </template>
 <style>
+
+#selector-labels {
+  line-height: 12px;
+  width: 50%;
+  text-align: right;
+}
+
+#selector-bars {
+  width: 50%;
+  margin: 0px auto;
+  text-align: left;
+}
+
 .col-multi-line {
   margin: 0px;
   padding: 0px;
