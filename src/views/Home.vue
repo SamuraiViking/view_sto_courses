@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <!-- Planner -->
-<!--     <div id="planner">
+    <div id="planner">
       <h1>{{ errors }}</h1>
       <div id="show-term">
         {{ userTerm.year }} {{ userTerm.semester }}
@@ -25,9 +25,7 @@
         <div> {{ course.days }} </div>
         <button v-on:click="removeCourse(course)"> Remove Course </button>
       </div>
-    </div> -->
-
-
+    </div>
 <!--     <label>
       Status
       <toggle-button style="width:300px;" v-model="hideStatus" 
@@ -123,7 +121,7 @@
       <div id="selector-labels">
         <p>Name: </p>
         <p>Department:</p>
-        <p>Class:</p>
+        <p>Type</p>
         <p>Days:</p>
         <p>Level:</p>
         <p>1st GE:</p>
@@ -133,7 +131,9 @@
 
       <div id="selector-bars">
         <!-- Department Selector -->
-
+        <form>
+          <input type="text" v-model="filters.name">
+        </form>
         <form>
           <select v-model="filters.department">
             <option v-for="department in departments" v-bind:value="department.value">
@@ -213,14 +213,9 @@
           <th scope="col" v-on:click="setSortAttribute('num_ratings')">     Reviews</th>
           <th scope="col" v-on:click="setSortAttribute('num_ratings')"></th>
           <th scope="col" v-on:click="setSortAttribute('num_ratings')"></th>
-          <!-- <th scope="col" v-on:click="setSortAttribute('number')">Num</th> -->
-          <!-- <th scope="col" v-on:click="setSortAttribute('section')">Sec</th>   -->
-          <!-- <th scope="col" v-on:click="setSortAttribute('location')">Loc</th> -->
-          <!-- <th style="max-width: 20px" scope="col"></th> -->
-          <!-- <th style="max-width: 20px" scope="col"></th> -->
         </tr>
       </thead>
-      <tbody v-for="course in filterByParams()">
+      <tbody v-for="course in filterBy(filterByParams(), filters.name, 'name')">
         <tr>
           <th scope="row"> 
             <span v-if="courseOpen(course.status)" class="green">O</span>
@@ -257,8 +252,6 @@
           <td> {{ course.rating }} </td>
           <td> {{ course.difficulty }} </td>
           <td> {{ course.num_ratings }} </td>
-          <!-- <th> {{ course.number }}</th> -->
-          <!-- <th> {{ course.section }} </th> -->
           <td>
             <div @click="addCourse(course)">Add</div>
           </td>
@@ -286,18 +279,9 @@ export default {
       year: 2019,
       semester: 1,
       userTerm: '',
-
-      user: {
-        year: 2019,
-        semester: 1,
-        term: 20191,
-        courses: []
-      },
-
-      allTermCourses: [],
+      termCourses: [],
       userTermCourses: [],
 
-      moreInfoCourse: '',
       nameSearch: '',
 
       // Params
@@ -312,6 +296,8 @@ export default {
         sortBy: '',
         name: ''
       },
+
+      starOnly: false,
 
       // Select Options
       showOptions: [
@@ -437,7 +423,7 @@ export default {
       this.userTermCourses = this.userTerm.courses;
     });
     axios.get("api/courses?term=20191&").then(response => {
-      this.allTermCourses = response.data.courses;
+      this.termCourses = response.data.courses;
     });
   },
   methods: {
@@ -469,7 +455,7 @@ export default {
     },
     getTermCourses: function() {
       axios.get(`api/courses?term=${this.year}${this.semester}`).then(response => {
-        this.allTermCourses = response.data.courses; 
+        this.termCourses = response.data.courses; 
       });
     },
     addCourse: function(theCourse) {
@@ -496,7 +482,13 @@ export default {
         {key: "gereqs", value: this.filters.ge2}
       ];
 
-      var filteredCourses = this.allTermCourses;
+      var filteredCourses = '';
+      if ( this.starOnly ) {
+        filteredCourses = this.userTermCourses;
+      } else {
+        filteredCourses = this.termCourses;
+      }
+
       for (var i = 0; i < paramsList.length; i++) {
         if (paramsList[i]['value']) {
           filteredCourses = this.filterBy(filteredCourses, paramsList[i]['value'], paramsList[i]['key']);
